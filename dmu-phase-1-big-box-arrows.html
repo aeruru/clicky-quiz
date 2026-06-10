@@ -10,14 +10,37 @@
     <main class="quiz-shell" aria-labelledby="page-title">
       <aside class="control-panel" aria-label="Quiz controls">
         <div>
-          <p class="eyebrow">First Quiz</p>
-          <h1 id="page-title">DMU Phase 1 Big Box Arrows</h1>
+          <h1 id="page-title">DMU Phase 1<br>Big Box Arrows</h1>
+          <p class="panel-copy">
+            Click on the correct position to drop your portal before the timers
+            expire.
+          </p>
         </div>
-        <div class="button-stack">
-          <button type="button">Start</button>
-          <button type="button">Reset</button>
-          <button type="button">Check Answer</button>
+
+        <div class="round-stats" aria-label="Round statistics">
+          <p>Played: <span id="rounds-played">0</span></p>
+          <p>Win streak: <span id="win-streak">0</span></p>
         </div>
+
+        <div class="arrow-panel" aria-live="polite">
+          <div class="arrow-card">
+            <img id="first-arrow-image" src="img/DMU/arrows/arrow-up.svg" alt="">
+            <span id="first-arrow-timer">--</span>
+          </div>
+          <div class="arrow-card">
+            <img id="second-arrow-image" src="img/DMU/arrows/arrow-right.svg" alt="">
+            <span id="second-arrow-timer">--</span>
+          </div>
+        </div>
+
+        <label
+          class="option-toggle"
+          title="For players who use right justified debuffs. This flips only the displayed arrow order."
+        >
+          <input id="flip-arrows" type="checkbox">
+          <span>Right justified debuffs</span>
+        </label>
+
         <a class="back-link" href="index.html">Back to quizzes</a>
       </aside>
 
@@ -28,22 +51,22 @@
             src="img/DMU/p1-arena.png"
             alt="DMU phase 1 circular arena"
           >
-          <div class="box-target box-target-1" aria-hidden="true"></div>
-          <div class="box-target box-target-2" aria-hidden="true"></div>
-          <div class="box-target box-target-3" aria-hidden="true"></div>
-          <div class="box-target box-target-4" aria-hidden="true"></div>
-          <div class="box-target box-target-5" aria-hidden="true"></div>
-          <div class="box-target box-target-6" aria-hidden="true"></div>
-          <div class="box-target box-target-7" aria-hidden="true"></div>
-          <div class="box-target box-target-8" aria-hidden="true"></div>
-          <div class="box-target box-target-9" aria-hidden="true"></div>
-          <div class="box-target box-target-10" aria-hidden="true"></div>
-          <div class="box-target box-target-11" aria-hidden="true"></div>
-          <div class="box-target box-target-12" aria-hidden="true"></div>
-          <div class="box-target box-target-13" aria-hidden="true"></div>
-          <div class="box-target box-target-14" aria-hidden="true"></div>
-          <div class="box-target box-target-15" aria-hidden="true"></div>
-          <div class="box-target box-target-16" aria-hidden="true"></div>
+          <button class="box-target box-target-1" type="button" aria-label="Box 1"></button>
+          <button class="box-target box-target-2" type="button" aria-label="Box 2"></button>
+          <button class="box-target box-target-3" type="button" aria-label="Box 3"></button>
+          <button class="box-target box-target-4" type="button" aria-label="Box 4"></button>
+          <button class="box-target box-target-5" type="button" aria-label="Box 5"></button>
+          <button class="box-target box-target-6" type="button" aria-label="Box 6"></button>
+          <button class="box-target box-target-7" type="button" aria-label="Box 7"></button>
+          <button class="box-target box-target-8" type="button" aria-label="Box 8"></button>
+          <button class="box-target box-target-9" type="button" aria-label="Box 9"></button>
+          <button class="box-target box-target-10" type="button" aria-label="Box 10"></button>
+          <button class="box-target box-target-11" type="button" aria-label="Box 11"></button>
+          <button class="box-target box-target-12" type="button" aria-label="Box 12"></button>
+          <button class="box-target box-target-13" type="button" aria-label="Box 13"></button>
+          <button class="box-target box-target-14" type="button" aria-label="Box 14"></button>
+          <button class="box-target box-target-15" type="button" aria-label="Box 15"></button>
+          <button class="box-target box-target-16" type="button" aria-label="Box 16"></button>
           <div class="marker marker-a" aria-label="Marker A">A</div>
           <div class="marker marker-b" aria-label="Marker B">B</div>
           <div class="marker marker-c" aria-label="Marker C">C</div>
@@ -52,8 +75,17 @@
           <div class="marker marker-2" aria-label="Marker 2">2</div>
           <div class="marker marker-3" aria-label="Marker 3">3</div>
           <div class="marker marker-4" aria-label="Marker 4">4</div>
+          <div class="arena-dialog start-overlay" id="start-overlay">
+            <p>Start Game</p>
+            <button id="start-button" type="button">Start</button>
+          </div>
+          <div class="round-result" id="round-result" hidden>
+            <p id="round-result-message"></p>
+            <button id="try-again-button" type="button">Try Again</button>
+          </div>
         </div>
       </section>
     </main>
+    <script src="dmu-phase-1-big-box-arrows.js"></script>
   </body>
 </html>
