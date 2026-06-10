@@ -15,6 +15,23 @@ body {
   margin: 0;
 }
 
+button {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 6px;
+  background: #b85732;
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+button:hover,
+button:focus-visible {
+  background: #934224;
+}
+
 .app {
   display: grid;
   min-height: 100vh;
@@ -87,4 +104,161 @@ p {
 .back-link:hover,
 .back-link:focus-visible {
   background: #433b35;
+}
+
+.quiz-page {
+  background: #171a1c;
+}
+
+.quiz-shell {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr);
+  gap: 18px;
+  width: min(100% - 32px, 1200px);
+  margin: 0 auto;
+  padding: 24px 0;
+  align-items: stretch;
+}
+
+.control-panel,
+.arena-card {
+  border: 1px solid #334047;
+  border-radius: 8px;
+  background: #20262a;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.24);
+}
+
+.control-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 0;
+  padding: 24px;
+}
+
+.control-panel h1 {
+  color: #f7f4ec;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.05;
+}
+
+.button-stack {
+  display: grid;
+  gap: 12px;
+  margin: 28px 0;
+}
+
+.button-stack button {
+  width: 100%;
+}
+
+.arena-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.arena-stage {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+}
+
+.arena-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.marker {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  display: grid;
+  width: clamp(34px, 7%, 58px);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 2px solid color-mix(in srgb, var(--marker-color), #ffffff 20%);
+  color: #ffffff;
+  background: color-mix(in srgb, var(--marker-color), transparent 38%);
+  box-shadow:
+    0 0 14px color-mix(in srgb, var(--marker-color), transparent 15%),
+    inset 0 0 16px rgba(255, 255, 255, 0.18);
+  font-size: clamp(1.4rem, 4vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1;
+  text-shadow: 0 0 8px #ffffff;
+  transform: translate(-50%, -50%);
+}
+
+.marker-a,
+.marker-b,
+.marker-c,
+.marker-d {
+  border-radius: 50%;
+}
+
+.marker-1,
+.marker-2,
+.marker-3,
+.marker-4 {
+  border-radius: 2px;
+}
+
+.marker-a {
+  --x: 50%;
+  --y: 18%;
+  --marker-color: #d94d67;
+}
+
+.marker-b {
+  --x: 80%;
+  --y: 50%;
+  --marker-color: #d7d14a;
+}
+
+.marker-c {
+  --x: 50%;
+  --y: 80%;
+  --marker-color: #4298df;
+}
+
+.marker-d {
+  --x: 20%;
+  --y: 50%;
+  --marker-color: #9b64d5;
+}
+
+.marker-1 {
+  --x: 34%;
+  --y: 34%;
+  --marker-color: #d94d67;
+}
+
+.marker-2 {
+  --x: 66%;
+  --y: 34%;
+  --marker-color: #d7d14a;
+}
+
+.marker-3 {
+  --x: 66%;
+  --y: 66%;
+  --marker-color: #4298df;
+}
+
+.marker-4 {
+  --x: 34%;
+  --y: 66%;
+  --marker-color: #9b64d5;
+}
+
+@media (max-width: 760px) {
+  .quiz-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .control-panel {
+    min-height: 280px;
+  }
 }
