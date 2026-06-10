@@ -207,24 +207,24 @@ p {
 
 .marker-a {
   --x: 50%;
-  --y: 18%;
+  --y: 12%;
   --marker-color: #d94d67;
 }
 
 .marker-b {
-  --x: 80%;
+  --x: 88%;
   --y: 50%;
   --marker-color: #d7d14a;
 }
 
 .marker-c {
   --x: 50%;
-  --y: 80%;
+  --y: 88%;
   --marker-color: #4298df;
 }
 
 .marker-d {
-  --x: 20%;
+  --x: 12%;
   --y: 50%;
   --marker-color: #9b64d5;
 }
