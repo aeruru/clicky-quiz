@@ -121,7 +121,8 @@ p {
 }
 
 .control-panel,
-.arena-card {
+.arena-card,
+.credits-panel {
   border: 1px solid #334047;
   border-radius: 8px;
   background: #20262a;
@@ -220,6 +221,30 @@ p {
 .arena-card {
   padding: 0;
   overflow: hidden;
+}
+
+.credits-panel {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 6px;
+  padding: 14px 18px;
+}
+
+.credits-panel p {
+  margin: 0;
+  color: #8f999f;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.credits-panel a {
+  color: #bba37e;
+  text-decoration: none;
+}
+
+.credits-panel a:hover,
+.credits-panel a:focus-visible {
+  text-decoration: underline;
 }
 
 .arena-stage {
