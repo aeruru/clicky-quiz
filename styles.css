@@ -228,6 +228,17 @@ p {
   width: 100%;
 }
 
+.arena-rotator {
+  position: absolute;
+  inset: 0;
+  transform-origin: center;
+  transition: transform 180ms ease;
+}
+
+.arena-rotator-d-north {
+  transform: rotate(90deg);
+}
+
 .arena-image {
   display: block;
   width: 100%;

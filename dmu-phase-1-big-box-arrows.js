@@ -7,6 +7,8 @@ const resultMessage = document.querySelector("#round-result-message");
 const roundsPlayed = document.querySelector("#rounds-played");
 const winStreak = document.querySelector("#win-streak");
 const flipArrows = document.querySelector("#flip-arrows");
+const rotateArena = document.querySelector("#rotate-arena");
+const arenaRotator = document.querySelector("#arena-rotator");
 const boxTargets = [...document.querySelectorAll(".box-target")];
 
 const arrowSlots = [
@@ -252,6 +254,9 @@ flipArrows.addEventListener("change", () => {
   if (game.timedArrows.length > 0) {
     renderArrowPanel();
   }
+});
+rotateArena.addEventListener("change", () => {
+  arenaRotator.classList.toggle("arena-rotator-d-north", rotateArena.checked);
 });
 boxTargets.forEach((box) => {
   box.addEventListener("click", handleBoxClick);
