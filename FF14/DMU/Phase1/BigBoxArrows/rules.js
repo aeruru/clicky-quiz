@@ -23,10 +23,10 @@
   );
 
   const arrowAssets = {
-    N: "img/DMU/arrows/arrow-up.svg",
-    E: "img/DMU/arrows/arrow-right.svg",
-    S: "img/DMU/arrows/arrow-down.svg",
-    W: "img/DMU/arrows/arrow-left.svg",
+    N: "arrows/arrow-up.svg",
+    E: "arrows/arrow-right.svg",
+    S: "arrows/arrow-down.svg",
+    W: "arrows/arrow-left.svg",
   };
 
   const comboTargets = {

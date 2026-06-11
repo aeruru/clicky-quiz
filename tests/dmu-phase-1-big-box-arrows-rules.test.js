@@ -1,7 +1,7 @@
 const assert = require("node:assert/strict");
 const test = require("node:test");
 
-const rules = require("../dmu-phase-1-big-box-arrows-rules.js");
+const rules = require("../FF14/DMU/Phase1/BigBoxArrows/rules.js");
 
 test("defines the eight valid ordered arrow combinations", () => {
   assert.deepEqual(rules.arrowCombos.map(rules.comboKey), [
