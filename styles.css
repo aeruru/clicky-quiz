@@ -490,6 +490,15 @@ p {
   text-align: center;
 }
 
+.round-result-win button {
+  background: #2f9e44;
+}
+
+.round-result-win button:hover,
+.round-result-win button:focus-visible {
+  background: #237a34;
+}
+
 @media (max-width: 760px) {
   .quiz-shell {
     grid-template-columns: 1fr;

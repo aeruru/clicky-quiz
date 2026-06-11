@@ -103,6 +103,8 @@ function resetRoundView() {
   game.clickStep = 0;
   game.comboKey = "";
   result.hidden = true;
+  result.classList.remove("round-result-win");
+  tryAgainButton.textContent = "Try Again";
   resetBoxes();
   arrowSlots.forEach((slot) => {
     slot.image.removeAttribute("src");
@@ -247,9 +249,13 @@ function finishRound(didWin, message = "") {
   if (didWin) {
     game.streak += 1;
     resultMessage.textContent = "You win 🍿";
+    result.classList.add("round-result-win");
+    tryAgainButton.textContent = "Play Again";
   } else {
     game.streak = 0;
     resultMessage.textContent = message || "Time's up. Try again 🤡";
+    result.classList.remove("round-result-win");
+    tryAgainButton.textContent = "Try Again";
   }
 
   updateStats();
