@@ -1,36 +1,4 @@
-const arrowCombos = [
-  ["N", "N"],
-  ["E", "E"],
-  ["S", "S"],
-  ["W", "W"],
-  ["N", "E"],
-  ["E", "S"],
-  ["S", "W"],
-  ["W", "N"],
-];
-
-const weightedArrowCombos = arrowCombos.flatMap((combo) =>
-  combo[0] === combo[1] ? [combo] : [combo, combo],
-);
-
-const arrowAssets = {
-  N: "img/DMU/arrows/arrow-up.svg",
-  E: "img/DMU/arrows/arrow-right.svg",
-  S: "img/DMU/arrows/arrow-down.svg",
-  W: "img/DMU/arrows/arrow-left.svg",
-};
-
-const comboTargets = {
-  "N+N": { any: [14, 15] },
-  "E+E": { any: [2, 3] },
-  "S+S": { any: [6, 7] },
-  "W+W": { any: [10, 11] },
-  "N+E": { N: 16, E: 1 },
-  "E+S": { E: 4, S: 5 },
-  "S+W": { S: 8, W: 9 },
-  "W+N": { W: 12, N: 13 },
-};
-
+const rules = window.bigBoxArrowRules;
 const startButton = document.querySelector("#start-button");
 const startOverlay = document.querySelector("#start-overlay");
 const tryAgainButton = document.querySelector("#try-again-button");
@@ -64,10 +32,6 @@ let game = {
   streak: 0,
 };
 
-function randomItem(items) {
-  return items[Math.floor(Math.random() * items.length)];
-}
-
 function buildTimedArrows(combo) {
   const timers = Math.random() < 0.5 ? [5, 8] : [8, 5];
 
@@ -75,7 +39,7 @@ function buildTimedArrows(combo) {
     direction,
     seconds: timers[index],
     endTime: 0,
-    asset: arrowAssets[direction],
+    asset: rules.arrowAssets[direction],
   }));
 }
 
@@ -119,12 +83,12 @@ function updateStats() {
   winStreak.textContent = game.streak;
 }
 
-function renderArrowPanel() {
-  const displayArrows = flipArrows.checked
-    ? [...game.timedArrows].reverse()
-    : game.timedArrows;
+function displayedArrows() {
+  return rules.displayedArrows(game.timedArrows, flipArrows.checked);
+}
 
-  displayArrows.forEach((arrow, index) => {
+function renderArrowPanel() {
+  displayedArrows().forEach((arrow, index) => {
     const slot = arrowSlots[index];
     slot.image.src = arrow.asset;
     slot.image.alt = `${arrow.direction} arrow`;
@@ -134,34 +98,22 @@ function renderArrowPanel() {
 }
 
 function orderedClickArrows() {
-  return [...game.timedArrows].sort((a, b) => a.seconds - b.seconds);
+  return rules.orderedClickArrows(game.timedArrows);
 }
 
 function randomCombo() {
-  const availableCombos = weightedArrowCombos.filter(
-    (combo) => combo.join("+") !== game.previousComboKey,
-  );
-
-  return randomItem(
-    availableCombos.length > 0 ? availableCombos : weightedArrowCombos,
-  );
+  return rules.randomCombo(game.previousComboKey);
 }
 
 function isCorrectBox(box, arrow) {
-  const target = comboTargets[game.comboKey];
   const clickedBox = boxNumber(box);
-
-  if (target.any) {
-    return target.any.includes(clickedBox);
-  }
-
-  return target[arrow.direction] === clickedBox;
+  return rules.isCorrectBox(game.comboKey, clickedBox, arrow.direction);
 }
 
 function updateTimers() {
   const now = Date.now();
 
-  game.timedArrows.forEach((arrow, index) => {
+  displayedArrows().forEach((arrow, index) => {
     const remaining = Math.max(0, (arrow.endTime - now) / 1000);
     arrowSlots[index].timer.textContent = `${Math.ceil(remaining)}s`;
   });
@@ -180,7 +132,7 @@ function startRound() {
   game.active = true;
   game.played += 1;
   const combo = randomCombo();
-  game.comboKey = combo.join("+");
+  game.comboKey = rules.comboKey(combo);
   game.previousComboKey = game.comboKey;
   game.timedArrows = buildTimedArrows(combo);
   const now = Date.now();
@@ -211,7 +163,7 @@ function placeArrow(box, arrow) {
 }
 
 function revealCorrectBoxes() {
-  const target = comboTargets[game.comboKey];
+  const target = rules.comboTargets[game.comboKey];
 
   if (target.any) {
     target.any.forEach((number) => {
