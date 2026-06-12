@@ -1,6 +1,7 @@
 const rules = window.gravenImage3Rules;
 const startButton = document.querySelector("#start-button");
 const startOverlay = document.querySelector("#start-overlay");
+const startOverlayMessage = startOverlay.querySelector("p");
 const tryAgainButton = document.querySelector("#try-again-button");
 const result = document.querySelector("#round-result");
 const resultMessage = document.querySelector("#round-result-message");
@@ -8,14 +9,15 @@ const roundsPlayed = document.querySelector("#rounds-played");
 const winStreak = document.querySelector("#win-streak");
 const roleButtons = [...document.querySelectorAll(".role-button")];
 const selectedRoleLabel = document.querySelector("#selected-role-label");
-const cycleLinesButton = document.querySelector("#cycle-lines-button");
-const lineConfigLabel = document.querySelector("#line-config-label");
 const lineOverlay = document.querySelector("#line-overlay");
-const rerollPatternButton = document.querySelector("#reroll-pattern-button");
+const patternPreview = document.querySelector(".pattern-preview");
+const roundTimer = document.querySelector("#round-timer");
+const timerCount = document.querySelector("#timer-count");
 const topPatternOrb = document.querySelector("#top-pattern-orb");
 const bottomPatternOrb = document.querySelector("#bottom-pattern-orb");
 const markerPattern = document.querySelector("#marker-pattern");
 const boxTargets = [...document.querySelectorAll(".box-target")];
+const roundSeconds = 7;
 
 const orbAssets = {
   blue: {
@@ -83,7 +85,13 @@ let game = {
   played: 0,
   selectedRole: "",
   streak: 0,
+  timerId: null,
+  timeRemaining: roundSeconds,
 };
+
+function currentLineConfig() {
+  return lineConfigs[game.lineConfigIndex];
+}
 
 function boxNumber(box) {
   return Number(box.getAttribute("aria-label").replace("Box ", ""));
@@ -93,10 +101,50 @@ function boxByNumber(number) {
   return boxTargets.find((box) => boxNumber(box) === number);
 }
 
+function selectedRoleAsset() {
+  const button = roleButtons.find((roleButton) => {
+    return roleButton.dataset.role === game.selectedRole;
+  });
+  const icon = button?.querySelector("img");
+  const number = button?.querySelector(".role-number");
+
+  return icon
+    ? {
+        alt: game.selectedRole,
+        number: number?.textContent || "",
+        src: icon.getAttribute("src"),
+      }
+    : null;
+}
+
+function placeRoleIcon(box) {
+  const asset = selectedRoleAsset();
+
+  if (!asset) {
+    return;
+  }
+
+  const marker = document.createElement("span");
+  const icon = document.createElement("img");
+  icon.alt = asset.alt;
+  icon.src = asset.src;
+  marker.className = "placed-role-icon";
+  marker.append(icon);
+
+  if (asset.number) {
+    const number = document.createElement("span");
+    number.className = "placed-role-number";
+    number.textContent = asset.number;
+    marker.append(number);
+  }
+
+  box.replaceChildren(marker);
+}
+
 function resetBoxes() {
   boxTargets.forEach((box) => {
     box.disabled = true;
-    box.textContent = boxNumber(box);
+    box.textContent = "";
     box.classList.remove(
       "box-target-selected",
       "box-target-wrong",
@@ -105,36 +153,75 @@ function resetBoxes() {
   });
 }
 
+function enableVisibleBoxes() {
+  boxTargets.forEach((box) => {
+    box.disabled = box.classList.contains("graven-spot-hidden");
+  });
+}
+
 function updateStats() {
   roundsPlayed.textContent = game.played;
   winStreak.textContent = game.streak;
 }
 
+function updateTimer() {
+  timerCount.textContent = game.timeRemaining;
+}
+
+function stopTimer() {
+  if (game.timerId) {
+    window.clearInterval(game.timerId);
+    game.timerId = null;
+  }
+}
+
+function startTimer() {
+  stopTimer();
+  game.timeRemaining = roundSeconds;
+  roundTimer.hidden = false;
+  updateTimer();
+
+  game.timerId = window.setInterval(() => {
+    game.timeRemaining -= 1;
+    updateTimer();
+
+    if (game.timeRemaining <= 0) {
+      revealCorrectBoxes();
+      finishRound(false, `Time's up. ${mechanicSummary()}`);
+    }
+  }, 1000);
+}
+
 function selectRole(role) {
   game.selectedRole = role;
   selectedRoleLabel.textContent = `: ${role}`;
+  startOverlayMessage.textContent = "Start Game";
+  startButton.disabled = false;
+  result.hidden = true;
 
   roleButtons.forEach((button) => {
     const isSelected = button.dataset.role === role;
     button.classList.toggle("role-button-selected", isSelected);
     button.setAttribute("aria-pressed", isSelected);
   });
+
+  if (game.active) {
+    resetRoundView({ showStart: true });
+  }
 }
 
 function renderLineConfig() {
-  const config = lineConfigs[game.lineConfigIndex];
+  const config = currentLineConfig();
   const hiddenBoxes = new Set(config.hiddenBoxes);
 
   lineOverlay.setAttribute("class", `line-overlay ${config.className}`);
-  lineConfigLabel.textContent = config.label;
   boxTargets.forEach((box) => {
     box.classList.toggle("graven-spot-hidden", hiddenBoxes.has(boxNumber(box)));
   });
-}
 
-function cycleLineConfig() {
-  game.lineConfigIndex = (game.lineConfigIndex + 1) % lineConfigs.length;
-  renderLineConfig();
+  if (game.active) {
+    enableVisibleBoxes();
+  }
 }
 
 function randomOrbPositions(random = Math.random) {
@@ -194,10 +281,12 @@ function renderPattern() {
   const bottomOrb = randomOrbAsset();
   const markers = randomMarkerPattern();
   const resolvedMarkerPattern = resolveMarkerPattern(topOrb, markers);
+  const lineRequirement = rules.resolveLineRequirement(bottomOrb.color);
 
   game.currentPattern = {
     bottomOrb: bottomOrb.color,
     bottomOrbPosition: positions.bottom,
+    lineRequirement,
     resolvedMarkerPattern,
     shownMarkerPattern: markers.id,
     topOrb: topOrb.color,
@@ -207,11 +296,29 @@ function renderPattern() {
   setPatternOrb(topPatternOrb, topOrb, positions.top);
   setPatternOrb(bottomPatternOrb, bottomOrb, positions.bottom);
   renderMarkerPattern(markers);
+  patternPreview.hidden = false;
 }
 
-function resetRoundView() {
+function generateRoundPattern() {
+  game.lineConfigIndex = (game.lineConfigIndex + 1) % lineConfigs.length;
+  renderLineConfig();
+  renderPattern();
+}
+
+function resetRoundView({ showStart = false } = {}) {
+  stopTimer();
   game.active = false;
   game.currentScenario = null;
+  game.currentPattern = null;
+  game.timeRemaining = roundSeconds;
+  roundTimer.hidden = true;
+  updateTimer();
+  patternPreview.hidden = true;
+  startOverlay.hidden = !showStart;
+  startOverlayMessage.textContent = game.selectedRole
+    ? "Start Game"
+    : "Choose your role first";
+  startButton.disabled = !game.selectedRole;
   result.hidden = true;
   result.classList.remove("round-result-win");
   tryAgainButton.textContent = "Try Again";
@@ -227,11 +334,13 @@ function revealCorrectBoxes() {
     const box = boxByNumber(number);
     if (box) {
       box.classList.add("box-target-correct");
+      placeRoleIcon(box);
     }
   });
 }
 
 function finishRound(didWin, message = "") {
+  stopTimer();
   game.active = false;
 
   boxTargets.forEach((box) => {
@@ -240,7 +349,7 @@ function finishRound(didWin, message = "") {
 
   if (didWin) {
     game.streak += 1;
-    resultMessage.textContent = "You win";
+    resultMessage.textContent = message || "You win";
     result.classList.add("round-result-win");
     tryAgainButton.textContent = "Play Again";
   } else {
@@ -254,21 +363,41 @@ function finishRound(didWin, message = "") {
   result.hidden = false;
 }
 
+function mechanicSummary(scenario = game.currentScenario) {
+  const pattern = game.currentPattern;
+  const markerCopy =
+    pattern.resolvedMarkerPattern === "spread" ? "spread" : "stack";
+  const lineCopy = pattern.lineRequirement === "out" ? "out of" : "in";
+
+  return `${game.selectedRole} ${markerCopy}, ${lineCopy} purple.`;
+}
+
+function buildScenario() {
+  return rules.scenarioForPattern({
+    lineConfig: currentLineConfig().id,
+    lineRequirement: game.currentPattern.lineRequirement,
+    markerPattern: game.currentPattern.resolvedMarkerPattern,
+    role: game.selectedRole,
+  });
+}
+
 function startRound() {
   resetRoundView();
-  renderPattern();
 
   if (!game.selectedRole) {
     startOverlay.hidden = false;
-    resultMessage.textContent = "Choose your role first";
-    result.classList.remove("round-result-win");
-    result.hidden = false;
+    startOverlayMessage.textContent = "Choose your role first";
     return;
   }
 
-  const scenario = rules.randomScenario(game.previousScenarioId);
+  generateRoundPattern();
+
+  const scenario = buildScenario();
+
   if (!scenario) {
+    patternPreview.hidden = true;
     startOverlay.hidden = false;
+    startOverlayMessage.textContent = `${game.selectedRole} logic is not added yet`;
     return;
   }
 
@@ -278,9 +407,8 @@ function startRound() {
   game.currentScenario = scenario;
   game.previousScenarioId = scenario.id;
   updateStats();
-  boxTargets.forEach((box) => {
-    box.disabled = false;
-  });
+  enableVisibleBoxes();
+  startTimer();
 }
 
 function handleBoxClick(event) {
@@ -292,20 +420,23 @@ function handleBoxClick(event) {
   const clickedBox = boxNumber(box);
 
   if (rules.isCorrectBox(game.currentScenario, clickedBox)) {
+    placeRoleIcon(box);
     box.classList.add("box-target-selected");
-    finishRound(true);
+    finishRound(true, `Correct! ${mechanicSummary()}`);
     return;
   }
 
+  placeRoleIcon(box);
   box.classList.add("box-target-wrong");
   revealCorrectBoxes();
-  finishRound(false, "Wrong spot. Try again");
+  finishRound(false, `Incorrect. ${mechanicSummary()}`);
 }
 
 startButton.addEventListener("click", startRound);
-tryAgainButton.addEventListener("click", startRound);
-cycleLinesButton.addEventListener("click", cycleLineConfig);
-rerollPatternButton.addEventListener("click", renderPattern);
+tryAgainButton.addEventListener("click", () => {
+  resetRoundView();
+  startRound();
+});
 roleButtons.forEach((button) => {
   button.setAttribute("aria-pressed", "false");
   button.addEventListener("click", () => {
@@ -316,7 +447,7 @@ boxTargets.forEach((box) => {
   box.addEventListener("click", handleBoxClick);
 });
 
-resetRoundView();
+resetRoundView({ showStart: true });
 updateStats();
 renderLineConfig();
-renderPattern();
+patternPreview.hidden = true;

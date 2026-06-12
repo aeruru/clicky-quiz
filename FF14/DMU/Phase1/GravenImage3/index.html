@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../../../../styles.css">
     <link rel="stylesheet" href="../../markers.css">
     <link rel="stylesheet" href="../BigBoxArrows/quiz.css">
-    <link rel="stylesheet" href="quiz.css?v=purple-lines">
+    <link rel="stylesheet" href="quiz.css?v=all-roles">
   </head>
   <body class="quiz-page">
     <main class="quiz-shell" aria-labelledby="page-title">
@@ -22,14 +22,6 @@
               Choose your role<span id="selected-role-label"></span>
             </h2>
             <div class="role-grid">
-              <button class="role-button" type="button" aria-label="R1" data-role="R1">
-                <img src="roles/arrow-role.svg" alt="">
-                <span class="role-number">1</span>
-              </button>
-              <button class="role-button" type="button" aria-label="M1" data-role="M1">
-                <img src="roles/fist-role.svg" alt="">
-                <span class="role-number">1</span>
-              </button>
               <button class="role-button" type="button" aria-label="MT" data-role="MT">
                 <img src="roles/shield-role.svg" alt="">
                 <span class="role-number">1</span>
@@ -38,13 +30,13 @@
                 <img src="roles/healer-role.svg" alt="">
                 <span class="role-number">1</span>
               </button>
-              <button class="role-button" type="button" aria-label="R2" data-role="R2">
-                <img src="roles/arrow-role.svg" alt="">
-                <span class="role-number">2</span>
-              </button>
-              <button class="role-button" type="button" aria-label="M2" data-role="M2">
+              <button class="role-button" type="button" aria-label="M1" data-role="M1">
                 <img src="roles/fist-role.svg" alt="">
-                <span class="role-number">2</span>
+                <span class="role-number">1</span>
+              </button>
+              <button class="role-button" type="button" aria-label="R1" data-role="R1">
+                <img src="roles/arrow-role.svg" alt="">
+                <span class="role-number">1</span>
               </button>
               <button class="role-button" type="button" aria-label="OT" data-role="OT">
                 <img src="roles/shield-role.svg" alt="">
@@ -52,6 +44,14 @@
               </button>
               <button class="role-button" type="button" aria-label="H2" data-role="H2">
                 <img src="roles/healer-role.svg" alt="">
+                <span class="role-number">2</span>
+              </button>
+              <button class="role-button" type="button" aria-label="M2" data-role="M2">
+                <img src="roles/fist-role.svg" alt="">
+                <span class="role-number">2</span>
+              </button>
+              <button class="role-button" type="button" aria-label="R2" data-role="R2">
+                <img src="roles/arrow-role.svg" alt="">
                 <span class="role-number">2</span>
               </button>
             </div>
@@ -64,6 +64,9 @@
         </div>
 
         <section class="mechanic-panel" aria-live="polite">
+          <div class="round-timer" id="round-timer" hidden>
+            Time: <span id="timer-count">7</span>
+          </div>
           <div class="pattern-preview" aria-label="Generated fire and lightning pattern">
             <div class="pattern-line pattern-line-fire">
               <img class="pattern-line-image" src="orbs/fire-line.svg" alt="">
@@ -90,16 +93,6 @@
             ></div>
           </div>
         </section>
-
-        <button id="reroll-pattern-button" type="button">
-          Generate orb pattern
-        </button>
-        <button id="cycle-lines-button" type="button">
-          Cycle purple lines
-        </button>
-        <p class="line-config-copy">
-          Purple lines: <span id="line-config-label">A1</span>
-        </p>
 
         <a class="back-link" href="../../../../index.html">Back to quizzes</a>
       </aside>
@@ -183,7 +176,7 @@
           </div>
           <div class="arena-dialog start-overlay" id="start-overlay" hidden>
             <p>Start Game</p>
-            <button id="start-button" type="button">Start</button>
+            <button id="start-button" type="button" disabled>Start</button>
           </div>
           <div class="round-result" id="round-result" hidden>
             <p id="round-result-message"></p>
@@ -203,7 +196,7 @@
         <p>AI tooling: Codex &amp; GPT 5.5 on Medium</p>
       </aside>
     </main>
-    <script src="rules.js"></script>
-    <script src="quiz.js?v=purple-lines"></script>
+    <script src="rules.js?v=all-roles"></script>
+    <script src="quiz.js?v=all-roles"></script>
   </body>
 </html>
