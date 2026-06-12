@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../../../../styles.css">
     <link rel="stylesheet" href="../../markers.css">
     <link rel="stylesheet" href="../BigBoxArrows/quiz.css">
-    <link rel="stylesheet" href="quiz.css">
+    <link rel="stylesheet" href="quiz.css?v=purple-lines">
   </head>
   <body class="quiz-page">
     <main class="quiz-shell" aria-labelledby="page-title">
@@ -25,20 +25,37 @@
         </div>
 
         <section class="mechanic-panel" aria-live="polite">
-          <p class="mechanic-label">Pattern</p>
-          <h2 id="mechanic-title">Ready check</h2>
-          <p id="mechanic-copy">
-            Start the quiz after the Graven 3 Thunder + Fire rule table is added.
-          </p>
+          <div class="pattern-preview" aria-label="Generated fire and lightning pattern">
+            <div class="pattern-line pattern-line-fire">
+              <img class="pattern-line-image" src="orbs/fire-line.svg" alt="">
+              <img
+                class="pattern-orb"
+                id="top-pattern-orb"
+                src="orbs/fire-question-orb.svg?v=orb-refresh"
+                alt="Top line orb"
+              >
+            </div>
+            <div class="pattern-line pattern-line-lightning">
+              <img class="pattern-line-image" src="orbs/lightning-line.svg" alt="">
+              <img
+                class="pattern-orb"
+                id="bottom-pattern-orb"
+                src="orbs/thunder-orb.svg?v=orb-refresh"
+                alt="Bottom line orb"
+              >
+            </div>
+          </div>
         </section>
 
-        <label
-          class="option-toggle"
-          title="Rotate the arena so the D marker is north."
-        >
-          <input id="rotate-arena" type="checkbox">
-          <span>D north</span>
-        </label>
+        <button id="reroll-pattern-button" type="button">
+          Generate orb pattern
+        </button>
+        <button id="cycle-lines-button" type="button">
+          Cycle purple lines
+        </button>
+        <p class="line-config-copy">
+          Purple lines: <span id="line-config-label">Diagonal A</span>
+        </p>
 
         <a class="back-link" href="../../../../index.html">Back to quizzes</a>
       </aside>
@@ -51,22 +68,59 @@
               src="../p1-arena.png"
               alt="DMU phase 1 circular arena"
             >
-            <button class="box-target box-target-1" type="button" aria-label="Box 1"></button>
-            <button class="box-target box-target-2" type="button" aria-label="Box 2"></button>
-            <button class="box-target box-target-3" type="button" aria-label="Box 3"></button>
-            <button class="box-target box-target-4" type="button" aria-label="Box 4"></button>
-            <button class="box-target box-target-5" type="button" aria-label="Box 5"></button>
-            <button class="box-target box-target-6" type="button" aria-label="Box 6"></button>
-            <button class="box-target box-target-7" type="button" aria-label="Box 7"></button>
-            <button class="box-target box-target-8" type="button" aria-label="Box 8"></button>
-            <button class="box-target box-target-9" type="button" aria-label="Box 9"></button>
-            <button class="box-target box-target-10" type="button" aria-label="Box 10"></button>
-            <button class="box-target box-target-11" type="button" aria-label="Box 11"></button>
-            <button class="box-target box-target-12" type="button" aria-label="Box 12"></button>
-            <button class="box-target box-target-13" type="button" aria-label="Box 13"></button>
-            <button class="box-target box-target-14" type="button" aria-label="Box 14"></button>
-            <button class="box-target box-target-15" type="button" aria-label="Box 15"></button>
-            <button class="box-target box-target-16" type="button" aria-label="Box 16"></button>
+            <svg
+              class="line-overlay"
+              id="line-overlay"
+              viewBox="0 0 100 100"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <g class="line-config line-config-diagonal-a">
+                <rect class="purple-band" x="-60" y="25" width="220" height="25" transform="rotate(-45 50 50)"></rect>
+                <rect class="purple-band" x="-60" y="75" width="220" height="25" transform="rotate(-45 50 50)"></rect>
+              </g>
+              <g class="line-config line-config-diagonal-b">
+                <rect class="purple-band" x="-60" y="0" width="220" height="25" transform="rotate(-45 50 50)"></rect>
+                <rect class="purple-band" x="-60" y="50" width="220" height="25" transform="rotate(-45 50 50)"></rect>
+              </g>
+              <g class="line-config line-config-rotated-a">
+                <rect class="purple-band" x="-60" y="25" width="220" height="25" transform="rotate(45 50 50)"></rect>
+                <rect class="purple-band" x="-60" y="75" width="220" height="25" transform="rotate(45 50 50)"></rect>
+              </g>
+              <g class="line-config line-config-rotated-b">
+                <rect class="purple-band" x="-60" y="0" width="220" height="25" transform="rotate(45 50 50)"></rect>
+                <rect class="purple-band" x="-60" y="50" width="220" height="25" transform="rotate(45 50 50)"></rect>
+              </g>
+            </svg>
+            <button class="box-target graven-spot graven-spot-1" type="button" aria-label="Box 1">1</button>
+            <button class="box-target graven-spot graven-spot-2" type="button" aria-label="Box 2">2</button>
+            <button class="box-target graven-spot graven-spot-3" type="button" aria-label="Box 3">3</button>
+            <button class="box-target graven-spot graven-spot-4" type="button" aria-label="Box 4">4</button>
+            <button class="box-target graven-spot graven-spot-5" type="button" aria-label="Box 5">5</button>
+            <button class="box-target graven-spot graven-spot-6" type="button" aria-label="Box 6">6</button>
+            <button class="box-target graven-spot graven-spot-7" type="button" aria-label="Box 7">7</button>
+            <button class="box-target graven-spot graven-spot-8" type="button" aria-label="Box 8">8</button>
+            <button class="box-target graven-spot graven-spot-9" type="button" aria-label="Box 9">9</button>
+            <button class="box-target graven-spot graven-spot-10" type="button" aria-label="Box 10">10</button>
+            <button class="box-target graven-spot graven-spot-11" type="button" aria-label="Box 11">11</button>
+            <button class="box-target graven-spot graven-spot-12" type="button" aria-label="Box 12">12</button>
+            <button class="box-target graven-spot graven-spot-13" type="button" aria-label="Box 13">13</button>
+            <button class="box-target graven-spot graven-spot-14" type="button" aria-label="Box 14">14</button>
+            <button class="box-target graven-spot graven-spot-15" type="button" aria-label="Box 15">15</button>
+            <button class="box-target graven-spot graven-spot-16" type="button" aria-label="Box 16">16</button>
+            <button class="box-target graven-spot graven-spot-17" type="button" aria-label="Box 17">17</button>
+            <button class="box-target graven-spot graven-spot-18" type="button" aria-label="Box 18">18</button>
+            <button class="box-target graven-spot graven-spot-19" type="button" aria-label="Box 19">19</button>
+            <button class="box-target graven-spot graven-spot-20" type="button" aria-label="Box 20">20</button>
+            <button class="box-target graven-spot graven-spot-21" type="button" aria-label="Box 21">21</button>
+            <button class="box-target graven-spot graven-spot-22" type="button" aria-label="Box 22">22</button>
+            <button class="box-target graven-spot graven-spot-23" type="button" aria-label="Box 23">23</button>
+            <button class="box-target graven-spot graven-spot-24" type="button" aria-label="Box 24">24</button>
+            <button class="box-target graven-spot graven-spot-25" type="button" aria-label="Box 25">25</button>
+            <button class="box-target graven-spot graven-spot-26" type="button" aria-label="Box 26">26</button>
+            <button class="box-target graven-spot graven-spot-27" type="button" aria-label="Box 27">27</button>
+            <button class="box-target graven-spot graven-spot-28" type="button" aria-label="Box 28">28</button>
+            <button class="box-target graven-spot graven-spot-29" type="button" aria-label="Box 29">29</button>
             <div class="marker marker-a" aria-label="Marker A">A</div>
             <div class="marker marker-b" aria-label="Marker B">B</div>
             <div class="marker marker-c" aria-label="Marker C">C</div>
@@ -76,7 +130,7 @@
             <div class="marker marker-3" aria-label="Marker 3">3</div>
             <div class="marker marker-4" aria-label="Marker 4">4</div>
           </div>
-          <div class="arena-dialog start-overlay" id="start-overlay">
+          <div class="arena-dialog start-overlay" id="start-overlay" hidden>
             <p>Start Game</p>
             <button id="start-button" type="button">Start</button>
           </div>
@@ -99,6 +153,6 @@
       </aside>
     </main>
     <script src="rules.js"></script>
-    <script src="quiz.js"></script>
+    <script src="quiz.js?v=purple-lines"></script>
   </body>
 </html>

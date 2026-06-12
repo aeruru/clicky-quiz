@@ -6,15 +6,48 @@ const result = document.querySelector("#round-result");
 const resultMessage = document.querySelector("#round-result-message");
 const roundsPlayed = document.querySelector("#rounds-played");
 const winStreak = document.querySelector("#win-streak");
-const rotateArena = document.querySelector("#rotate-arena");
-const arenaRotator = document.querySelector("#arena-rotator");
-const mechanicTitle = document.querySelector("#mechanic-title");
-const mechanicCopy = document.querySelector("#mechanic-copy");
+const cycleLinesButton = document.querySelector("#cycle-lines-button");
+const lineConfigLabel = document.querySelector("#line-config-label");
+const lineOverlay = document.querySelector("#line-overlay");
+const rerollPatternButton = document.querySelector("#reroll-pattern-button");
+const topPatternOrb = document.querySelector("#top-pattern-orb");
+const bottomPatternOrb = document.querySelector("#bottom-pattern-orb");
 const boxTargets = [...document.querySelectorAll(".box-target")];
+
+const orbAssets = {
+  blue: {
+    alt: "Blue orb",
+    src: "orbs/thunder-orb.svg?v=orb-refresh",
+  },
+  red: {
+    alt: "Red orb",
+    src: "orbs/fire-question-orb.svg?v=orb-refresh",
+  },
+};
+
+const lineConfigs = [
+  {
+    className: "line-overlay-diagonal-a",
+    label: "Diagonal A",
+  },
+  {
+    className: "line-overlay-diagonal-b",
+    label: "Diagonal B",
+  },
+  {
+    className: "line-overlay-rotated-a",
+    label: "Rotated A",
+  },
+  {
+    className: "line-overlay-rotated-b",
+    label: "Rotated B",
+  },
+];
 
 let game = {
   active: false,
   currentScenario: null,
+  lineConfigIndex: 0,
   previousScenarioId: "",
   played: 0,
   streak: 0,
@@ -31,7 +64,7 @@ function boxByNumber(number) {
 function resetBoxes() {
   boxTargets.forEach((box) => {
     box.disabled = true;
-    box.textContent = "";
+    box.textContent = boxNumber(box);
     box.classList.remove(
       "box-target-selected",
       "box-target-wrong",
@@ -45,9 +78,49 @@ function updateStats() {
   winStreak.textContent = game.streak;
 }
 
-function setMechanicCopy(title, copy) {
-  mechanicTitle.textContent = title;
-  mechanicCopy.textContent = copy;
+function renderLineConfig() {
+  const config = lineConfigs[game.lineConfigIndex];
+
+  lineOverlay.setAttribute("class", `line-overlay ${config.className}`);
+  lineConfigLabel.textContent = config.label;
+}
+
+function cycleLineConfig() {
+  game.lineConfigIndex = (game.lineConfigIndex + 1) % lineConfigs.length;
+  renderLineConfig();
+}
+
+function randomOrbPositions(random = Math.random) {
+  const first = 18 + random() * 64;
+  const secondCandidates =
+    first < 50
+      ? [Math.max(first + 28, 54), 82]
+      : [18, Math.min(first - 28, 46)];
+
+  return {
+    top: first,
+    bottom:
+      secondCandidates[0] + random() * (secondCandidates[1] - secondCandidates[0]),
+  };
+}
+
+function randomOrbAsset(random = Math.random) {
+  return random() < 0.5 ? orbAssets.red : orbAssets.blue;
+}
+
+function setPatternOrb(orb, asset, position) {
+  orb.src = asset.src;
+  orb.alt = asset.alt;
+  orb.style.setProperty("--orb-x", `${position}%`);
+}
+
+function renderPattern() {
+  const positions = randomOrbPositions();
+  const topOrb = randomOrbAsset();
+  const bottomOrb = randomOrbAsset();
+
+  setPatternOrb(topPatternOrb, topOrb, positions.top);
+  setPatternOrb(bottomPatternOrb, bottomOrb, positions.bottom);
 }
 
 function resetRoundView() {
@@ -97,13 +170,10 @@ function finishRound(didWin, message = "") {
 
 function startRound() {
   resetRoundView();
+  renderPattern();
 
   const scenario = rules.randomScenario(game.previousScenarioId);
   if (!scenario) {
-    setMechanicCopy(
-      "Rules pending",
-      "The Graven 3 Thunder + Fire arena is ready. Add scenarios to rules.js to make this playable.",
-    );
     startOverlay.hidden = false;
     return;
   }
@@ -113,8 +183,6 @@ function startRound() {
   game.played += 1;
   game.currentScenario = scenario;
   game.previousScenarioId = scenario.id;
-
-  setMechanicCopy(scenario.title, scenario.prompt);
   updateStats();
   boxTargets.forEach((box) => {
     box.disabled = false;
@@ -142,12 +210,13 @@ function handleBoxClick(event) {
 
 startButton.addEventListener("click", startRound);
 tryAgainButton.addEventListener("click", startRound);
-rotateArena.addEventListener("change", () => {
-  arenaRotator.classList.toggle("arena-rotator-d-north", rotateArena.checked);
-});
+cycleLinesButton.addEventListener("click", cycleLineConfig);
+rerollPatternButton.addEventListener("click", renderPattern);
 boxTargets.forEach((box) => {
   box.addEventListener("click", handleBoxClick);
 });
 
 resetRoundView();
 updateStats();
+renderLineConfig();
+renderPattern();
