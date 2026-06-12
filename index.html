@@ -4,21 +4,38 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Aerry Berry's Clicky Quizzes</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=avatar-title">
   </head>
   <body>
     <main class="app">
       <section class="intro" aria-labelledby="page-title">
-        <p class="eyebrow">FFXIV Mechanics Practice</p>
-        <h1 id="page-title">Aerry Berry's Clicky Quizzes</h1>
-        <p>
-          Practice simple Final Fantasy XIV mechanics with focused clicky
-          quizzes.
-        </p>
+        <div class="intro-copy">
+          <p class="eyebrow">FFXIV Mechanics Practice</p>
+          <div class="title-row">
+            <figure class="avatar-card" aria-label="Aerry Berry avatar">
+              <img
+                src="img/aerry-berry-avatar.png"
+                width="96"
+                height="96"
+                alt="Stylized avatar of Aerry Berry smiling with fried chicken"
+              >
+            </figure>
+            <h1 id="page-title">Aerry Berry's Clicky Quizzes</h1>
+          </div>
+          <p>
+            Practice simple Final Fantasy XIV mechanics with focused clicky
+            quizzes.
+          </p>
+        </div>
         <nav class="quiz-list" aria-label="Available quizzes">
           <a class="quiz-link" href="FF14/DMU/Phase1/BigBoxArrows/">
             DMU Phase 1 Big Box Arrows
           </a>
+          <!--
+          <a class="quiz-link" href="FF14/DMU/Phase1/GravenImage3/">
+            DMU Phase 1 Graven 3 Thunder + Fire
+          </a>
+          -->
         </nav>
       </section>
     </main>

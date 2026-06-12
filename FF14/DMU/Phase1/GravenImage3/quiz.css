@@ -1,0 +1,40 @@
+.mechanic-panel {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid #334047;
+  border-radius: 8px;
+  background: #171a1c;
+}
+
+.mechanic-label {
+  margin: 0;
+  color: #bba37e;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.mechanic-panel h2 {
+  margin: 0;
+  color: #f7f4ec;
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+.mechanic-panel p:last-child {
+  margin: 0;
+  color: #bfc8cc;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.box-target-correct {
+  border-color: #f8d66d;
+  background: rgba(248, 214, 109, 0.18);
+  box-shadow:
+    0 0 12px rgba(248, 214, 109, 0.85),
+    inset 0 0 10px rgba(248, 214, 109, 0.22);
+}

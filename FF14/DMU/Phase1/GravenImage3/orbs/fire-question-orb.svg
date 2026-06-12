@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Fire question orb</title>
+  <desc id="desc">A red fire orb with a golden glowing question mark.</desc>
+  <defs>
+    <radialGradient id="orb-fill" cx="43%" cy="35%" r="62%">
+      <stop offset="0" stop-color="#ffb45c"/>
+      <stop offset="0.2" stop-color="#e73b21"/>
+      <stop offset="0.48" stop-color="#8b1118"/>
+      <stop offset="0.78" stop-color="#3b0710"/>
+      <stop offset="1" stop-color="#180208"/>
+    </radialGradient>
+    <radialGradient id="hot-rim" cx="50%" cy="50%" r="50%">
+      <stop offset="0.72" stop-color="#ff9b1f" stop-opacity="0"/>
+      <stop offset="0.9" stop-color="#ff5c1c" stop-opacity="0.58"/>
+      <stop offset="1" stop-color="#ffcf5b" stop-opacity="0.88"/>
+    </radialGradient>
+    <linearGradient id="question-fill" x1="44" x2="86" y1="24" y2="103" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff4a8"/>
+      <stop offset="0.42" stop-color="#ffc936"/>
+      <stop offset="0.78" stop-color="#ff7a20"/>
+      <stop offset="1" stop-color="#ffe77d"/>
+    </linearGradient>
+    <filter id="fire-glow" x="-35%" y="-35%" width="170%" height="170%">
+      <feGaussianBlur stdDeviation="3.6" result="blur"/>
+      <feColorMatrix
+        in="blur"
+        type="matrix"
+        values="0 0 0 0 1 0 0 0 0 0.25 0 0 0 0 0.05 0 0 0 0.9 0"
+        result="glow"
+      />
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="question-glow" x="-45%" y="-45%" width="190%" height="190%">
+      <feGaussianBlur stdDeviation="3.2" result="blur"/>
+      <feColorMatrix
+        in="blur"
+        type="matrix"
+        values="0 0 0 0 1 0 0 0 0 0.72 0 0 0 0 0.08 0 0 0 0.95 0"
+        result="glow"
+      />
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <circle cx="64" cy="64" r="50" fill="#5a0710" opacity="0.54" filter="url(#fire-glow)"/>
+  <circle cx="64" cy="64" r="48" fill="url(#orb-fill)"/>
+  <circle cx="64" cy="64" r="48" fill="url(#hot-rim)"/>
+  <path
+    d="M35 31c9-10 22-16 36-14 24 3 42 25 39 49-1 12-7 23-15 31 4-10 5-21 1-32-8-25-32-38-61-34Z"
+    fill="#ffdf73"
+    opacity="0.13"
+  />
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M25 44c11-12 22-16 34-14M84 26c-2 14 2 24 14 31M28 80c14-7 27-7 40 0M77 99c7-9 16-14 27-16" stroke="#ff6a24" stroke-width="4" opacity="0.58"/>
+    <path d="M39 24c5 6 6 12 3 19M97 44c-8 6-12 13-13 23M43 102c-4-9-9-15-17-18" stroke="#ffcf45" stroke-width="3" opacity="0.55"/>
+    <path d="M50 18c-8 17-8 31 0 42M106 69c-18 1-32 7-43 17M24 66c14 4 26 3 37-3" stroke="#c91f19" stroke-width="5" opacity="0.55"/>
+  </g>
+  <path
+    d="M62 84c-5 0-8-3-8-7 0-6 3-11 10-16 7-5 10-9 10-15 0-7-5-12-13-12-7 0-13 4-17 11l-13-8c7-12 18-19 32-19 17 0 29 10 29 26 0 12-6 20-17 27-5 3-7 6-7 11v2H62Zm-1 23c-5 0-9-4-9-9s4-9 9-9 9 4 9 9-4 9-9 9Z"
+    fill="#5b0a08"
+    opacity="0.65"
+    transform="translate(3 3)"
+  />
+  <path
+    d="M62 84c-5 0-8-3-8-7 0-6 3-11 10-16 7-5 10-9 10-15 0-7-5-12-13-12-7 0-13 4-17 11l-13-8c7-12 18-19 32-19 17 0 29 10 29 26 0 12-6 20-17 27-5 3-7 6-7 11v2H62Zm-1 23c-5 0-9-4-9-9s4-9 9-9 9 4 9 9-4 9-9 9Z"
+    fill="url(#question-fill)"
+    filter="url(#question-glow)"
+  />
+  <path
+    d="M51 31c10-5 21-3 27 4M61 90c4 0 7 3 7 7"
+    fill="none"
+    stroke="#fff4a8"
+    stroke-linecap="round"
+    stroke-width="4"
+    opacity="0.7"
+  />
+  <ellipse cx="45" cy="33" rx="17" ry="7" fill="#ffffff" opacity="0.12" transform="rotate(-23 45 33)"/>
+</svg>
