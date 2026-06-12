@@ -53,8 +53,8 @@
   const h2SpreadOutSpots = {
     A1: [4],
     A2: [5],
-    A3: [6],
-    A4: [5],
+    A3: [5],
+    A4: [6],
   };
 
   const h2SpreadInSpots = {
