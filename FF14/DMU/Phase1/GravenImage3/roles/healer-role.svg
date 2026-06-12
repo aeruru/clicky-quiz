@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title desc">
+  <title id="title">Healer role icon</title>
+  <desc id="desc">A square role icon with a green healing cross.</desc>
+  <defs>
+    <linearGradient id="frame" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#d5cb7a"/>
+      <stop offset="0.52" stop-color="#506c30"/>
+      <stop offset="1" stop-color="#142112"/>
+    </linearGradient>
+    <linearGradient id="field" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#3e6b32"/>
+      <stop offset="0.6" stop-color="#18311c"/>
+      <stop offset="1" stop-color="#091109"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2.8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect x="8" y="8" width="80" height="80" rx="12" fill="#0c140c"/>
+  <rect x="12" y="12" width="72" height="72" rx="9" fill="url(#frame)"/>
+  <rect x="18" y="18" width="60" height="60" rx="6" fill="url(#field)"/>
+  <path
+    d="M41 21h14v20h20v14H55v20H41V55H21V41h20Z"
+    fill="#f7ffe6"
+    stroke="#cfffa3"
+    stroke-linejoin="round"
+    stroke-width="5"
+    filter="url(#glow)"
+  />
+  <path d="M48 27v42M27 48h42" fill="none" stroke="#67d36c" stroke-linecap="round" stroke-width="5" opacity="0.42"/>
+</svg>

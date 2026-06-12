@@ -7,6 +7,77 @@
   background: #171a1c;
 }
 
+.control-panel h1 {
+  font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+.role-picker {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.role-picker h2 {
+  margin: 0;
+  color: #f7f4ec;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.role-button {
+  position: relative;
+  display: grid;
+  min-height: 0;
+  justify-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #dce5e8;
+}
+
+.role-button:hover,
+.role-button:focus-visible {
+  background: transparent;
+}
+
+.role-button-selected {
+  box-shadow:
+    0 0 0 2px #f8d66d,
+    0 0 12px rgba(248, 214, 109, 0.76);
+}
+
+.role-button img {
+  display: block;
+  width: min(100%, 42px);
+  aspect-ratio: 1;
+  border-radius: 8px;
+}
+
+.role-number {
+  position: absolute;
+  right: 9px;
+  bottom: 7px;
+  display: grid;
+  min-width: 15px;
+  height: 15px;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(20, 14, 10, 0.82);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 0 4px #000000;
+}
+
 .mechanic-label {
   margin: 0;
   color: #bba37e;
@@ -70,6 +141,36 @@
   filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.28));
 }
 
+.marker-pattern {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  min-height: 70px;
+  margin-top: 2px;
+  padding: 4px 0;
+}
+
+.marker-pattern-spread {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px 10px;
+}
+
+.marker-pattern-stack {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.pattern-marker {
+  display: block;
+  width: 28px;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.marker-pattern-stack .pattern-marker {
+  width: 56px;
+}
+
 .line-config-copy {
   margin: 0;
   color: #bfc8cc;
@@ -90,10 +191,10 @@
   display: none;
 }
 
-.line-overlay-diagonal-a .line-config-diagonal-a,
-.line-overlay-diagonal-b .line-config-diagonal-b,
-.line-overlay-rotated-a .line-config-rotated-a,
-.line-overlay-rotated-b .line-config-rotated-b {
+.line-overlay-a1 .line-config-a1,
+.line-overlay-a2 .line-config-a2,
+.line-overlay-a3 .line-config-a3,
+.line-overlay-a4 .line-config-a4 {
   display: block;
 }
 
@@ -114,6 +215,10 @@
   color: #d8ffde;
   font-size: clamp(0.68rem, 1.35vw, 0.94rem);
   z-index: 4;
+}
+
+.graven-spot-hidden {
+  display: none;
 }
 
 .graven-spot-1 {

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 88" role="img" aria-labelledby="title desc">
+  <title id="title">Spread marker</title>
+  <desc id="desc">A red-orange teardrop spread marker with a gold outline.</desc>
+  <defs>
+    <linearGradient id="marker-fill" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#ef3c13"/>
+      <stop offset="0.5" stop-color="#d31913"/>
+      <stop offset="1" stop-color="#8e0d10"/>
+    </linearGradient>
+    <filter id="marker-glow" x="-40%" y="-25%" width="180%" height="160%">
+      <feGaussianBlur stdDeviation="2.2" result="blur"/>
+      <feColorMatrix
+        in="blur"
+        type="matrix"
+        values="0 0 0 0 1 0 0 0 0 0.56 0 0 0 0 0 0 0 0 0.88 0"
+        result="gold-glow"
+      />
+      <feMerge>
+        <feMergeNode in="gold-glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <path
+    d="M32 4C19 4 8 17 8 31c0 12 8 21 18 29l6 24 6-24c10-8 18-17 18-29C56 17 45 4 32 4Z"
+    fill="url(#marker-fill)"
+    stroke="#ffb000"
+    stroke-linejoin="round"
+    stroke-width="7"
+    filter="url(#marker-glow)"
+  />
+  <path
+    d="M32 10c-10 0-18 10-18 21 0 10 7 18 17 25"
+    fill="none"
+    stroke="#ff7741"
+    stroke-linecap="round"
+    stroke-width="3"
+    opacity="0.45"
+  />
+</svg>
