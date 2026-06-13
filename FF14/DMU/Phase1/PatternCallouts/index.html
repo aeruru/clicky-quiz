@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DMU Phase 1 Pattern Callouts | Aerry Berry's Clicky Quizzes</title>
+    <link rel="stylesheet" href="../../../../styles.css">
+    <link rel="stylesheet" href="quiz.css?v=pattern-callouts">
+  </head>
+  <body class="callout-page">
+    <main class="callout-shell" aria-labelledby="page-title">
+      <section class="callout-panel">
+        <div class="callout-header">
+          <div>
+            <p class="callout-eyebrow">DMU Phase 1</p>
+            <h1 id="page-title">Pattern Callouts</h1>
+          </div>
+          <div class="callout-stats" aria-label="Round statistics">
+            <p>Played <span id="rounds-played">0</span></p>
+            <p>Streak <span id="win-streak">0</span></p>
+          </div>
+        </div>
+
+        <section class="mechanic-shot" aria-label="Generated mechanic screenshot">
+          <div class="pattern-line pattern-line-fire">
+            <img
+              class="pattern-line-image"
+              src="../GravenImage3/orbs/fire-line.svg"
+              alt=""
+            >
+            <img
+              class="pattern-orb"
+              id="top-pattern-orb"
+              src="../GravenImage3/orbs/fire-question-orb.svg"
+              alt="Top line orb"
+            >
+          </div>
+          <div class="pattern-line pattern-line-lightning">
+            <img
+              class="pattern-line-image"
+              src="../GravenImage3/orbs/lightning-line.svg"
+              alt=""
+            >
+            <img
+              class="pattern-orb"
+              id="bottom-pattern-orb"
+              src="../GravenImage3/orbs/thunder-orb.svg"
+              alt="Bottom line orb"
+            >
+          </div>
+          <div
+            class="marker-pattern marker-pattern-spread"
+            id="marker-pattern"
+            aria-label="Generated spread or stack marker pattern"
+          ></div>
+        </section>
+
+        <section class="answer-area" aria-label="Callout answers">
+          <button
+            class="answer-button"
+            type="button"
+            data-answer-group="markerPattern"
+            data-answer-value="spread"
+          >
+            Spread
+          </button>
+          <button
+            class="answer-button"
+            type="button"
+            data-answer-group="position"
+            data-answer-value="in"
+          >
+            In
+          </button>
+          <button
+            class="answer-button"
+            type="button"
+            data-answer-group="markerPattern"
+            data-answer-value="stack"
+          >
+            Stack
+          </button>
+          <button
+            class="answer-button"
+            type="button"
+            data-answer-group="position"
+            data-answer-value="out"
+          >
+            Out
+          </button>
+        </section>
+
+        <div class="result-row">
+          <p id="round-result" aria-live="polite">Pick one from each side.</p>
+          <button id="next-button" type="button">Next Pattern</button>
+        </div>
+
+        <a class="back-link" href="../../../../index.html">Back to quizzes</a>
+      </section>
+    </main>
+    <script src="rules.js?v=pattern-callouts"></script>
+    <script src="quiz.js?v=pattern-callouts"></script>
+  </body>
+</html>
