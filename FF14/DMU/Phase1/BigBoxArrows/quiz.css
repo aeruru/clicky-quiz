@@ -30,9 +30,20 @@
 }
 
 .control-panel h1 {
+  margin: 0;
   color: #f7f4ec;
   font-size: clamp(1.8rem, 4vw, 2.6rem);
   line-height: 1.05;
+}
+
+.quiz-eyebrow {
+  margin: 0 0 8px;
+  color: #bba37e;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .panel-copy {
