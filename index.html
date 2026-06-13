@@ -4,35 +4,57 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Aerry Berry's Clicky Quizzes</title>
-    <link rel="stylesheet" href="styles.css?v=avatar-title">
+    <link rel="stylesheet" href="styles.css?v=quiz-thumbnails">
   </head>
   <body>
     <main class="app">
       <section class="intro" aria-labelledby="page-title">
-        <div class="intro-copy">
-          <p class="eyebrow">FFXIV Mechanics Practice</p>
-          <div class="title-row">
-            <figure class="avatar-card" aria-label="Aerry Berry avatar">
-              <img
-                src="img/aerry-berry-avatar-small.jpg"
-                width="96"
-                height="96"
-                alt="Stylized avatar of Aerry Berry smiling with fried chicken"
-              >
-            </figure>
-            <h1 id="page-title">Aerry Berry's Clicky Quizzes</h1>
+        <div class="intro-hero">
+          <figure class="avatar-card" aria-label="Aerry Berry avatar">
+            <img
+              src="img/aerry-berry-avatar-small.jpg"
+              width="144"
+              height="144"
+              alt="Stylized avatar of Aerry Berry smiling with fried chicken"
+            >
+          </figure>
+          <div class="intro-copy">
+            <p class="eyebrow">FFXIV Mechanics Practice</p>
+            <div class="title-copy">
+              <h1 id="page-title">Aerry Berry's Clicky Quizzes</h1>
+              <p>
+                Practice simple Final Fantasy XIV mechanics with focused clicky
+                quizzes.
+              </p>
+            </div>
           </div>
-          <p>
-            Practice simple Final Fantasy XIV mechanics with focused clicky
-            quizzes.
-          </p>
         </div>
         <nav class="quiz-list" aria-label="Available quizzes">
-          <a class="quiz-link" href="FF14/DMU/Phase1/BigBoxArrows/">
-            DMU Phase 1 Big Box Arrows
+          <a class="quiz-card" href="FF14/DMU/Phase1/BigBoxArrows/">
+            <img
+              class="quiz-thumb"
+              src="img/thumb-big-box-arrows.png"
+              width="168"
+              height="104"
+              alt="Big Box Arrows arena pattern preview"
+            >
+            <span class="quiz-card-copy">
+              <span class="quiz-card-title">DMU Phase 1 Big Box Arrows</span>
+              <span class="quiz-card-subtitle">Portal placement practice</span>
+            </span>
           </a>
-          <a class="quiz-link" href="FF14/DMU/Phase1/GravenImage3/">
-            DMU Phase 1 Graven 3 Thunder + Fire
+          <a class="quiz-card" href="FF14/DMU/Phase1/GravenImage3/">
+            <img
+              class="quiz-thumb"
+              src="img/thumb-graven-image-3.png"
+              width="168"
+              height="104"
+              alt="Graven 3 Thunder and Fire pattern preview"
+            >
+            <span class="quiz-card-copy">
+              <span class="quiz-card-title">DMU Phase 1 Graven 3 Thunder + Fire</span>
+              <span class="quiz-card-subtitle">Role and arena spot practice</span>
+            </span>
           </a>
         </nav>
       </section>
