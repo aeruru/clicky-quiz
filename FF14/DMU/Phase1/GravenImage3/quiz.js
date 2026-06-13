@@ -193,11 +193,13 @@ function startTimer() {
 }
 
 function selectRole(role) {
+  const wasActive = game.active;
+  const hadStartedRound = Boolean(game.currentScenario);
+
   game.selectedRole = role;
   selectedRoleLabel.textContent = `: ${role}`;
   startOverlayMessage.textContent = "Start Game";
   startButton.disabled = false;
-  result.hidden = true;
 
   roleButtons.forEach((button) => {
     const isSelected = button.dataset.role === role;
@@ -205,8 +207,10 @@ function selectRole(role) {
     button.setAttribute("aria-pressed", isSelected);
   });
 
-  if (game.active) {
-    resetRoundView({ showStart: true });
+  if (wasActive || hadStartedRound) {
+    interruptRound(`Role changed to ${role}`);
+  } else {
+    result.hidden = true;
   }
 }
 
@@ -360,6 +364,21 @@ function finishRound(didWin, message = "") {
   }
 
   updateStats();
+  result.hidden = false;
+}
+
+function interruptRound(message) {
+  stopTimer();
+  game.active = false;
+  startOverlay.hidden = true;
+  resultMessage.textContent = message;
+  result.classList.add("round-result-win");
+  tryAgainButton.textContent = "Play Again";
+
+  boxTargets.forEach((box) => {
+    box.disabled = true;
+  });
+
   result.hidden = false;
 }
 
