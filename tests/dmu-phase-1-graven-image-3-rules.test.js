@@ -387,7 +387,7 @@ test("defines H2 spread out positions by line config", () => {
       markerPattern: "spread",
       role: "H2",
     }),
-    [6],
+    [5],
   );
   assert.deepEqual(
     rules.correctBoxesFor({
@@ -396,7 +396,7 @@ test("defines H2 spread out positions by line config", () => {
       markerPattern: "spread",
       role: "H2",
     }),
-    [5],
+    [6],
   );
 });
 
@@ -426,7 +426,7 @@ test("flips H2 spread positions when player should be in purple", () => {
       markerPattern: "spread",
       role: "H2",
     }),
-    [5],
+    [6],
   );
   assert.deepEqual(
     rules.correctBoxesFor({
@@ -435,7 +435,7 @@ test("flips H2 spread positions when player should be in purple", () => {
       markerPattern: "spread",
       role: "H2",
     }),
-    [6],
+    [5],
   );
 });
 
