@@ -3,7 +3,7 @@ const test = require("node:test");
 
 const rules = require("../FF14/DMU/Phase1/GravenImage3/rules.js");
 
-test("starts without configured Graven 3 Thunder + Fire scenarios", () => {
+test("starts without configured Graven 3 Lightning + Fire scenarios", () => {
   assert.deepEqual(rules.scenarios, []);
   assert.equal(rules.randomScenario("any"), null);
 });

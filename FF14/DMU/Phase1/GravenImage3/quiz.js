@@ -23,12 +23,12 @@ const orbAssets = {
   blue: {
     alt: "Blue orb",
     color: "blue",
-    src: "orbs/thunder-orb.svg?v=orb-refresh",
+    src: "orbs/truth-orb.svg",
   },
   red: {
     alt: "Red orb",
     color: "red",
-    src: "orbs/fire-question-orb.svg?v=orb-refresh",
+    src: "orbs/lie-orb.svg",
   },
 };
 

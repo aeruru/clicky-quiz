@@ -11,11 +11,11 @@ const winStreak = document.querySelector("#win-streak");
 const orbAssets = {
   blue: {
     alt: "Blue orb",
-    src: "../GravenImage3/orbs/thunder-orb.svg",
+    src: "../GravenImage3/orbs/truth-orb.svg",
   },
   red: {
     alt: "Red orb",
-    src: "../GravenImage3/orbs/fire-question-orb.svg",
+    src: "../GravenImage3/orbs/lie-orb.svg",
   },
 };
 

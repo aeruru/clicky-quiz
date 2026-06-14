@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
-  <title id="title">Thunder orb</title>
+  <title id="title">Lightning orb</title>
   <desc id="desc">A dark blue magical orb with a bright lightning core.</desc>
   <defs>
     <radialGradient id="orb-fill" cx="45%" cy="40%" r="58%">
