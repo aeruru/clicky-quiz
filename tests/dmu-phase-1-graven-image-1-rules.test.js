@@ -3,27 +3,34 @@ const test = require("node:test");
 
 const rules = require("../FF14/DMU/Phase1/GravenImage1/rules.js");
 
-test("blue top orb keeps the shown spread or stack pattern", () => {
-  assert.equal(rules.resolveMarkerPattern("blue", "spread"), "spread");
-  assert.equal(rules.resolveMarkerPattern("blue", "stack"), "stack");
+test("truth keeps the shown spread or stack pattern", () => {
+  assert.equal(rules.resolveMarkerPattern("spread", "truth"), "spread");
+  assert.equal(rules.resolveMarkerPattern("stack", "truth"), "stack");
 });
 
-test("red top orb flips the shown spread or stack pattern", () => {
-  assert.equal(rules.resolveMarkerPattern("red", "spread"), "stack");
-  assert.equal(rules.resolveMarkerPattern("red", "stack"), "spread");
+test("lie flips the shown spread or stack pattern", () => {
+  assert.equal(rules.resolveMarkerPattern("spread", "lie"), "stack");
+  assert.equal(rules.resolveMarkerPattern("stack", "lie"), "spread");
 });
 
-test("bottom orb resolves in or out", () => {
-  assert.equal(rules.resolvePosition("blue"), "out");
-  assert.equal(rules.resolvePosition("red"), "in");
+test("parses screenshot names into quiz patterns", () => {
+  assert.deepEqual(
+    rules.patternFromImageFile("iaf-stack-lie-out-2.png"),
+    {
+      id: "iaf-stack-lie-out-2",
+      imageAlt: "Ice and fire stack lie out pattern",
+      imageSrc: "patterns/iaf-stack-lie-out-2.png",
+      mechanic: "iaf",
+      position: "out",
+      shownMarkerPattern: "stack",
+      truthState: "lie",
+      variant: 2,
+    },
+  );
 });
 
 test("validates a complete callout selection", () => {
-  const pattern = {
-    bottomOrb: "blue",
-    shownMarkerPattern: "spread",
-    topOrb: "red",
-  };
+  const pattern = rules.patternFromImageFile("iaf-spread-lie-out-1.png");
 
   assert.equal(
     rules.isCorrectSelection(pattern, {
@@ -38,5 +45,13 @@ test("validates a complete callout selection", () => {
       position: "out",
     }),
     false,
+  );
+});
+
+test("exposes one quiz pattern for every configured screenshot", () => {
+  assert.equal(rules.patterns.length, 15);
+  assert.equal(
+    rules.patterns.every((pattern) => pattern.imageSrc.endsWith(".png")),
+    true,
   );
 });

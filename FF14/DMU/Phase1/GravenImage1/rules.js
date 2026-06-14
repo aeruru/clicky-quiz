@@ -8,61 +8,77 @@
   root.patternCalloutRules = rules;
 })(typeof globalThis !== "undefined" ? globalThis : this, function buildRules() {
   const markerPatterns = ["spread", "stack"];
-  const orbColors = ["blue", "red"];
+  const positions = ["in", "out"];
+  const truthStates = ["truth", "lie"];
+  const patternImageFiles = [
+    "iaf-spread-lie-in-1.png",
+    "iaf-spread-lie-in-2.png",
+    "iaf-spread-lie-out-1.png",
+    "iaf-spread-lie-out-2.png",
+    "iaf-spread-lie-out-3.png",
+    "iaf-spread-truth-in-1.png",
+    "iaf-spread-truth-in-2.png",
+    "iaf-spread-truth-out-1.png",
+    "iaf-stack-lie-in-1.png",
+    "iaf-stack-lie-in-2.png",
+    "iaf-stack-lie-out-1.png",
+    "iaf-stack-lie-out-2.png",
+    "iaf-stack-truth-out-1.png",
+    "iaf-stack-truth-out-2.png",
+    "iaf-stack-truth-out-3.png",
+  ];
 
   function oppositeMarkerPattern(markerPattern) {
     return markerPattern === "spread" ? "stack" : "spread";
   }
 
-  function resolveMarkerPattern(topOrb, shownMarkerPattern) {
-    return topOrb === "blue"
+  function resolveMarkerPattern(shownMarkerPattern, truthState) {
+    return truthState === "truth"
       ? shownMarkerPattern
       : oppositeMarkerPattern(shownMarkerPattern);
-  }
-
-  function resolvePosition(bottomOrb) {
-    return bottomOrb === "blue" ? "out" : "in";
   }
 
   function resolvePattern(pattern) {
     return {
       markerPattern: resolveMarkerPattern(
-        pattern.topOrb,
         pattern.shownMarkerPattern,
+        pattern.truthState,
       ),
-      position: resolvePosition(pattern.bottomOrb),
+      position: pattern.position,
     };
   }
+
+  function patternFromImageFile(fileName) {
+    const match = fileName.match(
+      /^iaf-(spread|stack)-(truth|lie)-(in|out)-(\d+)\.png$/,
+    );
+
+    if (!match) {
+      throw new Error(`Unexpected Graven Image 1 pattern filename: ${fileName}`);
+    }
+
+    const [, shownMarkerPattern, truthState, position, variant] = match;
+
+    return {
+      id: fileName.replace(".png", ""),
+      imageAlt: `Ice and fire ${shownMarkerPattern} ${truthState} ${position} pattern`,
+      imageSrc: `patterns/${fileName}`,
+      mechanic: "iaf",
+      position,
+      shownMarkerPattern,
+      truthState,
+      variant: Number(variant),
+    };
+  }
+
+  const patterns = patternImageFiles.map(patternFromImageFile);
 
   function randomItem(items, random) {
     return items[Math.floor(random() * items.length)];
   }
 
-  function randomOrbPositions(random = Math.random) {
-    const first = 18 + random() * 64;
-    const secondCandidates =
-      first < 50
-        ? [Math.max(first + 28, 54), 82]
-        : [18, Math.min(first - 28, 46)];
-
-    return {
-      top: first,
-      bottom:
-        secondCandidates[0] +
-        random() * (secondCandidates[1] - secondCandidates[0]),
-    };
-  }
-
   function randomPattern(random = Math.random) {
-    const positions = randomOrbPositions(random);
-
-    return {
-      bottomOrb: randomItem(orbColors, random),
-      bottomOrbPosition: positions.bottom,
-      shownMarkerPattern: randomItem(markerPatterns, random),
-      topOrb: randomItem(orbColors, random),
-      topOrbPosition: positions.top,
-    };
+    return randomItem(patterns, random);
   }
 
   function isCorrectSelection(pattern, selection) {
@@ -77,10 +93,13 @@
   return {
     isCorrectSelection,
     markerPatterns,
-    orbColors,
+    oppositeMarkerPattern,
+    patternFromImageFile,
+    patterns,
+    positions,
     randomPattern,
     resolveMarkerPattern,
     resolvePattern,
-    resolvePosition,
+    truthStates,
   };
 });

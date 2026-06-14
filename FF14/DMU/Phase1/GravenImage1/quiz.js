@@ -1,38 +1,13 @@
 const rules = window.patternCalloutRules;
 const answerButtons = [...document.querySelectorAll(".answer-button")];
-const bottomPatternOrb = document.querySelector("#bottom-pattern-orb");
-const markerPattern = document.querySelector("#marker-pattern");
 const nextButton = document.querySelector("#next-button");
+const patternScreenshot = document.querySelector("#pattern-screenshot");
 const result = document.querySelector("#round-result");
 const roundsPlayed = document.querySelector("#rounds-played");
-const topPatternOrb = document.querySelector("#top-pattern-orb");
+const roundTimer = document.querySelector("#round-timer");
+const timerCount = document.querySelector("#timer-count");
 const winStreak = document.querySelector("#win-streak");
-
-const orbAssets = {
-  blue: {
-    alt: "Blue orb",
-    src: "../GravenImage3/orbs/truth-orb.svg",
-  },
-  red: {
-    alt: "Red orb",
-    src: "../GravenImage3/orbs/lie-orb.svg",
-  },
-};
-
-const markerAssets = {
-  spread: {
-    alt: "Spread marker",
-    className: "marker-pattern marker-pattern-spread",
-    count: 8,
-    src: "../GravenImage3/markers/spread-marker.svg",
-  },
-  stack: {
-    alt: "Stack marker",
-    className: "marker-pattern marker-pattern-stack",
-    count: 2,
-    src: "../GravenImage3/markers/spread-ring-marker.svg",
-  },
-};
+const roundSeconds = 7;
 
 let game = {
   active: false,
@@ -43,41 +18,40 @@ let game = {
     position: "",
   },
   streak: 0,
+  timerId: null,
+  timeRemaining: roundSeconds,
 };
-
-function setPatternOrb(orb, asset, position) {
-  orb.src = asset.src;
-  orb.alt = asset.alt;
-  orb.style.setProperty("--orb-x", `${position}%`);
-}
-
-function renderMarkerPattern(patternName) {
-  const pattern = markerAssets[patternName];
-  markerPattern.className = pattern.className;
-  markerPattern.replaceChildren();
-
-  for (let index = 0; index < pattern.count; index += 1) {
-    const marker = document.createElement("img");
-    marker.className = "pattern-marker";
-    marker.src = pattern.src;
-    marker.alt = pattern.alt;
-    markerPattern.append(marker);
-  }
-}
-
-function renderPattern(pattern) {
-  setPatternOrb(topPatternOrb, orbAssets[pattern.topOrb], pattern.topOrbPosition);
-  setPatternOrb(
-    bottomPatternOrb,
-    orbAssets[pattern.bottomOrb],
-    pattern.bottomOrbPosition,
-  );
-  renderMarkerPattern(pattern.shownMarkerPattern);
-}
 
 function updateStats() {
   roundsPlayed.textContent = game.played;
   winStreak.textContent = game.streak;
+}
+
+function updateTimer() {
+  timerCount.textContent = game.timeRemaining;
+}
+
+function stopTimer() {
+  if (game.timerId) {
+    window.clearInterval(game.timerId);
+    game.timerId = null;
+  }
+}
+
+function startTimer() {
+  stopTimer();
+  game.timeRemaining = roundSeconds;
+  roundTimer.hidden = false;
+  updateTimer();
+
+  game.timerId = window.setInterval(() => {
+    game.timeRemaining -= 1;
+    updateTimer();
+
+    if (game.timeRemaining <= 0) {
+      finishRound(false, "Time's up.");
+    }
+  }, 1000);
 }
 
 function resetButtons() {
@@ -109,10 +83,19 @@ function labelForAnswer(answer) {
   return `${answer.markerPattern}, ${answer.position}`;
 }
 
-function finishRound() {
-  const answer = rules.resolvePattern(game.currentPattern);
-  const didWin = rules.isCorrectSelection(game.currentPattern, game.selection);
+function renderPattern(pattern) {
+  patternScreenshot.src = pattern.imageSrc;
+  patternScreenshot.alt = pattern.imageAlt;
+}
 
+function finishRound(didWin = rules.isCorrectSelection(game.currentPattern, game.selection), prefix = "") {
+  if (!game.active) {
+    return;
+  }
+
+  const answer = rules.resolvePattern(game.currentPattern);
+
+  stopTimer();
   game.active = false;
   game.played += 1;
   game.streak = didWin ? game.streak + 1 : 0;
@@ -130,7 +113,7 @@ function finishRound() {
 
   result.textContent = didWin
     ? `Correct: ${labelForAnswer(answer)}.`
-    : `Answer: ${labelForAnswer(answer)}.`;
+    : `${prefix ? `${prefix} ` : ""}Answer: ${labelForAnswer(answer)}.`;
   updateStats();
 }
 
@@ -141,6 +124,7 @@ function maybeScoreRound() {
 }
 
 function startRound() {
+  stopTimer();
   game.active = true;
   game.currentPattern = rules.randomPattern();
   game.selection = {
@@ -150,7 +134,8 @@ function startRound() {
 
   resetButtons();
   renderPattern(game.currentPattern);
-  result.textContent = "Pick one from each side.";
+  result.textContent = "Pick spread or stack, then in or out.";
+  startTimer();
 }
 
 answerButtons.forEach((button) => {
