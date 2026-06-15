@@ -129,6 +129,11 @@
   background: #433b35;
 }
 
+.panel-links {
+  display: grid;
+  gap: 10px;
+}
+
 .arena-card {
   padding: 0;
   overflow: hidden;

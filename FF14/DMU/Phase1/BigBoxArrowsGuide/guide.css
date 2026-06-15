@@ -1,0 +1,135 @@
+.guide-page {
+  background: #171a1c;
+  color: #f7f4ec;
+}
+
+.guide-shell {
+  width: min(100% - 32px, 1080px);
+  margin: 0 auto;
+  padding: 28px 0 40px;
+}
+
+.guide-header {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 22px;
+  padding: 24px;
+  border: 1px solid #334047;
+  border-radius: 8px;
+  background: #20262a;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.24);
+}
+
+.guide-header h1 {
+  color: #f7f4ec;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+}
+
+.guide-header p {
+  max-width: 48rem;
+  margin: 0;
+  color: #bfc8cc;
+}
+
+.guide-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.guide-actions a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border-radius: 6px;
+  background: #5f554c;
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.guide-actions a:hover,
+.guide-actions a:focus-visible {
+  background: #433b35;
+}
+
+.guide-steps {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: guide-step;
+}
+
+.guide-step {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid #334047;
+  border-radius: 8px;
+  background: #20262a;
+  counter-increment: guide-step;
+}
+
+.guide-step-media {
+  display: grid;
+  gap: 10px;
+}
+
+.guide-step-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid #334047;
+  border-radius: 6px;
+  background: #171a1c;
+}
+
+.guide-step-media-pair {
+  grid-template-columns: 0.75fr 1fr;
+}
+
+.guide-step-copy {
+  display: grid;
+  gap: 10px;
+}
+
+.guide-step-copy::before {
+  content: counter(guide-step);
+  display: grid;
+  width: 42px;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 50%;
+  background: #b85732;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.guide-step-label {
+  color: #bba37e;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.guide-step-copy p {
+  margin: 0;
+  color: #f7f4ec;
+  font-size: clamp(1.05rem, 2vw, 1.28rem);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+@media (max-width: 760px) {
+  .guide-step {
+    grid-template-columns: 1fr;
+  }
+}

@@ -152,6 +152,10 @@ p {
   background: #20262a;
 }
 
+.quiz-thumb-link {
+  display: block;
+}
+
 .quiz-card-copy {
   display: grid;
   gap: 6px;
@@ -159,9 +163,16 @@ p {
 }
 
 .quiz-card-title {
+  color: #241f1a;
   font-size: 1.1rem;
   font-weight: 800;
   line-height: 1.2;
+  text-decoration: none;
+}
+
+.quiz-card-title:hover,
+.quiz-card-title:focus-visible {
+  text-decoration: underline;
 }
 
 .quiz-card-subtitle {
@@ -169,6 +180,17 @@ p {
   font-size: 0.95rem;
   font-weight: 700;
   line-height: 1.3;
+}
+
+.quiz-card-inline-link {
+  color: #8b4f2f;
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+.quiz-card-inline-link:hover,
+.quiz-card-inline-link:focus-visible {
+  color: #b85732;
 }
 
 @media (max-width: 700px) {
