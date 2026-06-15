@@ -93,6 +93,7 @@
 
 .guide-step-media-pair {
   grid-template-columns: 0.75fr 1fr;
+  align-items: center;
 }
 
 .guide-step-copy {
