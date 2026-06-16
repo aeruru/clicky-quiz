@@ -72,13 +72,49 @@
   }
 
   const patterns = patternImageFiles.map(patternFromImageFile);
+  const patternGroups = Object.values(
+    patterns.reduce((groups, pattern) => {
+      const key = patternGroupKey(pattern);
+      groups[key] = groups[key] || {
+        id: key,
+        patterns: [],
+      };
+      groups[key].patterns.push(pattern);
+      return groups;
+    }, {}),
+  );
+
+  function patternGroupKey(pattern) {
+    return [
+      pattern.shownMarkerPattern,
+      pattern.truthState,
+      pattern.position,
+    ].join("+");
+  }
 
   function randomItem(items, random) {
     return items[Math.floor(random() * items.length)];
   }
 
-  function randomPattern(random = Math.random) {
-    return randomItem(patterns, random);
+  function randomPattern(previousPatternId = "", random = Math.random) {
+    if (typeof previousPatternId === "function") {
+      random = previousPatternId;
+      previousPatternId = "";
+    }
+
+    const availableGroups = patternGroups.filter((group) =>
+      group.patterns.some((pattern) => pattern.id !== previousPatternId),
+    );
+    const groupPool = availableGroups.length > 0 ? availableGroups : patternGroups;
+    const group = randomItem(groupPool, random);
+    const screenshotPool = group.patterns.filter(
+      (pattern) => pattern.id !== previousPatternId,
+    );
+
+    return randomItem(
+      screenshotPool.length > 0 ? screenshotPool : group.patterns,
+      random,
+    );
   }
 
   function isCorrectSelection(pattern, selection) {
@@ -95,6 +131,8 @@
     markerPatterns,
     oppositeMarkerPattern,
     patternFromImageFile,
+    patternGroupKey,
+    patternGroups,
     patterns,
     positions,
     randomPattern,

@@ -55,3 +55,32 @@ test("exposes one quiz pattern for every configured screenshot", () => {
     true,
   );
 });
+
+test("groups screenshots by their quiz pattern", () => {
+  const groupCounts = rules.patternGroups.reduce((result, group) => {
+    result[group.id] = group.patterns.length;
+    return result;
+  }, {});
+
+  assert.deepEqual(groupCounts, {
+    "spread+lie+in": 2,
+    "spread+lie+out": 3,
+    "spread+truth+in": 2,
+    "spread+truth+out": 1,
+    "stack+lie+in": 2,
+    "stack+lie+out": 2,
+    "stack+truth+out": 3,
+  });
+});
+
+test("randomly picks a pattern group before picking a screenshot", () => {
+  const pattern = rules.randomPattern(() => 0.5);
+
+  assert.equal(rules.patternGroupKey(pattern), "spread+truth+out");
+});
+
+test("does not repeat the same screenshot twice in a row", () => {
+  const pattern = rules.randomPattern("iaf-spread-truth-out-1", () => 0.5);
+
+  assert.notEqual(pattern.id, "iaf-spread-truth-out-1");
+});

@@ -12,6 +12,7 @@ const roundSeconds = 7;
 let game = {
   active: false,
   currentPattern: null,
+  previousPatternId: "",
   played: 0,
   selection: {
     markerPattern: "",
@@ -126,7 +127,8 @@ function maybeScoreRound() {
 function startRound() {
   stopTimer();
   game.active = true;
-  game.currentPattern = rules.randomPattern();
+  game.currentPattern = rules.randomPattern(game.previousPatternId);
+  game.previousPatternId = game.currentPattern.id;
   game.selection = {
     markerPattern: "",
     position: "",
