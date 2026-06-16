@@ -66,6 +66,13 @@
               </button>
             </div>
           </section>
+          <label
+            class="option-toggle"
+            title="Show a matching mechanic screenshot when one is available."
+          >
+            <input id="use-pattern-screenshots" type="checkbox">
+            <span>Use screenshots</span>
+          </label>
         </div>
 
         <div class="round-stats" aria-label="Round statistics">
@@ -77,6 +84,13 @@
           <div class="round-timer" id="round-timer" hidden>
             Time: <span id="timer-count">7</span>
           </div>
+          <img
+            class="pattern-screenshot"
+            id="pattern-screenshot"
+            src=""
+            alt=""
+            hidden
+          >
           <div class="pattern-preview" aria-label="Generated fire and lightning pattern">
             <div class="pattern-line pattern-line-fire">
               <img class="pattern-line-image" src="orbs/fire-line.svg" alt="">

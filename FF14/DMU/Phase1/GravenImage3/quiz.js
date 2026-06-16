@@ -9,7 +9,9 @@ const roundsPlayed = document.querySelector("#rounds-played");
 const winStreak = document.querySelector("#win-streak");
 const roleButtons = [...document.querySelectorAll(".role-button")];
 const selectedRoleLabel = document.querySelector("#selected-role-label");
+const usePatternScreenshots = document.querySelector("#use-pattern-screenshots");
 const lineOverlay = document.querySelector("#line-overlay");
+const patternScreenshot = document.querySelector("#pattern-screenshot");
 const patternPreview = document.querySelector(".pattern-preview");
 const roundTimer = document.querySelector("#round-timer");
 const timerCount = document.querySelector("#timer-count");
@@ -279,7 +281,35 @@ function renderMarkerPattern(pattern) {
   }
 }
 
-function renderPattern() {
+function renderPatternDisplay() {
+  const screenshot = usePatternScreenshots.checked
+    ? rules.randomPatternScreenshot(game.currentPattern)
+    : null;
+
+  if (screenshot) {
+    patternScreenshot.src = screenshot.imageSrc;
+    patternScreenshot.alt = screenshot.imageAlt;
+    patternScreenshot.hidden = false;
+    patternPreview.hidden = true;
+    return;
+  }
+
+  patternScreenshot.hidden = true;
+  setPatternOrb(
+    topPatternOrb,
+    orbAssets[game.currentPattern.topOrb],
+    game.currentPattern.topOrbPosition,
+  );
+  setPatternOrb(
+    bottomPatternOrb,
+    orbAssets[game.currentPattern.bottomOrb],
+    game.currentPattern.bottomOrbPosition,
+  );
+  renderMarkerPattern(markerPatterns[game.currentPattern.shownMarkerPattern]);
+  patternPreview.hidden = false;
+}
+
+function generatePattern() {
   const positions = randomOrbPositions();
   const topOrb = randomOrbAsset();
   const bottomOrb = randomOrbAsset();
@@ -293,20 +323,18 @@ function renderPattern() {
     lineRequirement,
     resolvedMarkerPattern,
     shownMarkerPattern: markers.id,
+    truthState: rules.resolveTruthState(topOrb.color),
     topOrb: topOrb.color,
     topOrbPosition: positions.top,
   };
 
-  setPatternOrb(topPatternOrb, topOrb, positions.top);
-  setPatternOrb(bottomPatternOrb, bottomOrb, positions.bottom);
-  renderMarkerPattern(markers);
-  patternPreview.hidden = false;
+  renderPatternDisplay();
 }
 
 function generateRoundPattern() {
   game.lineConfigIndex = (game.lineConfigIndex + 1) % lineConfigs.length;
   renderLineConfig();
-  renderPattern();
+  generatePattern();
 }
 
 function resetRoundView({ showStart = false } = {}) {
@@ -317,6 +345,9 @@ function resetRoundView({ showStart = false } = {}) {
   game.timeRemaining = roundSeconds;
   roundTimer.hidden = true;
   updateTimer();
+  patternScreenshot.removeAttribute("src");
+  patternScreenshot.alt = "";
+  patternScreenshot.hidden = true;
   patternPreview.hidden = true;
   startOverlay.hidden = !showStart;
   startOverlayMessage.textContent = game.selectedRole
@@ -464,6 +495,11 @@ roleButtons.forEach((button) => {
 });
 boxTargets.forEach((box) => {
   box.addEventListener("click", handleBoxClick);
+});
+usePatternScreenshots.addEventListener("change", () => {
+  if (game.currentPattern) {
+    renderPatternDisplay();
+  }
 });
 
 resetRoundView({ showStart: true });

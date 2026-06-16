@@ -8,6 +8,21 @@
   root.gravenImage3Rules = rules;
 })(typeof globalThis !== "undefined" ? globalThis : this, function buildRules() {
   const scenarios = [];
+  const patternScreenshotFiles = [
+    "laf-spread-lie-in-1.png",
+    "laf-spread-lie-in-2.png",
+    "laf-spread-lie-out-1.png",
+    "laf-spread-lie-out-2.png",
+    "laf-spread-lie-out-3.png",
+    "laf-spread-lie-out-4.png",
+    "laf-spread-truth-in-1.png",
+    "laf-spread-truth-out-1.png",
+    "laf-stack-lie-in-1.png",
+    "laf-stack-lie-in-2.png",
+    "laf-stack-lie-in-3.png",
+    "laf-stack-lie-out-1.png",
+    "laf-stack-lie-out-2.png",
+  ];
   const stackOutSpots = {
     dps: {
       A1: [13],
@@ -119,6 +134,69 @@
     return bottomOrbColor === "blue" ? "out" : "in";
   }
 
+  function resolveTruthState(orbColor) {
+    return orbColor === "blue" ? "truth" : "lie";
+  }
+
+  function screenshotKeyForPattern(pattern) {
+    return [
+      pattern.shownMarkerPattern,
+      pattern.truthState || resolveTruthState(pattern.topOrb),
+      pattern.lineRequirement,
+    ].join("+");
+  }
+
+  function patternScreenshotFromImageFile(fileName) {
+    const match = fileName.match(
+      /^laf-(spread|stack)-(truth|lie)-(in|out)-(\d+)\.png$/,
+    );
+
+    if (!match) {
+      throw new Error(`Unexpected Graven Image 3 pattern filename: ${fileName}`);
+    }
+
+    const [, shownMarkerPattern, truthState, lineRequirement, variant] = match;
+
+    return {
+      id: fileName.replace(".png", ""),
+      imageAlt: `Lightning and fire ${shownMarkerPattern} ${truthState} ${lineRequirement} pattern`,
+      imageSrc: `patterns/${fileName}`,
+      lineRequirement,
+      mechanic: "laf",
+      shownMarkerPattern,
+      truthState,
+      variant: Number(variant),
+    };
+  }
+
+  const patternScreenshots = patternScreenshotFiles.map(
+    patternScreenshotFromImageFile,
+  );
+
+  const patternScreenshotsByKey = patternScreenshots.reduce(
+    (screenshotsByKey, screenshot) => {
+      const key = screenshotKeyForPattern(screenshot);
+      screenshotsByKey[key] = screenshotsByKey[key] || [];
+      screenshotsByKey[key].push(screenshot);
+      return screenshotsByKey;
+    },
+    {},
+  );
+
+  function randomItem(items, random) {
+    return items[Math.floor(random() * items.length)];
+  }
+
+  function randomPatternScreenshot(pattern, random = Math.random) {
+    const screenshots = patternScreenshotsByKey[screenshotKeyForPattern(pattern)] || [];
+
+    if (screenshots.length === 0) {
+      return null;
+    }
+
+    return randomItem(screenshots, random);
+  }
+
   function correctBoxesFor({ lineConfig, lineRequirement, markerPattern, role }) {
     return (
       correctSpots[role]?.[markerPattern]?.[lineRequirement]?.[lineConfig] || []
@@ -159,8 +237,14 @@
     correctBoxesFor,
     correctSpots,
     isCorrectBox,
+    patternScreenshotFiles,
+    patternScreenshotFromImageFile,
+    patternScreenshots,
+    randomPatternScreenshot,
     randomScenario,
     resolveLineRequirement,
+    resolveTruthState,
+    screenshotKeyForPattern,
     scenarios,
     scenarioForPattern,
   };

@@ -23,6 +23,51 @@ test("resolves purple line requirement from bottom orb color", () => {
   assert.equal(rules.resolveLineRequirement("red"), "in");
 });
 
+test("resolves truth state from top orb color", () => {
+  assert.equal(rules.resolveTruthState("blue"), "truth");
+  assert.equal(rules.resolveTruthState("red"), "lie");
+});
+
+test("parses screenshot names into Graven 3 patterns", () => {
+  assert.deepEqual(
+    rules.patternScreenshotFromImageFile("laf-stack-lie-in-3.png"),
+    {
+      id: "laf-stack-lie-in-3",
+      imageAlt: "Lightning and fire stack lie in pattern",
+      imageSrc: "patterns/laf-stack-lie-in-3.png",
+      lineRequirement: "in",
+      mechanic: "laf",
+      shownMarkerPattern: "stack",
+      truthState: "lie",
+      variant: 3,
+    },
+  );
+});
+
+test("finds screenshots for matching generated patterns", () => {
+  const screenshot = rules.randomPatternScreenshot(
+    {
+      lineRequirement: "out",
+      shownMarkerPattern: "spread",
+      topOrb: "red",
+    },
+    () => 0.99,
+  );
+
+  assert.equal(screenshot.id, "laf-spread-lie-out-4");
+});
+
+test("returns no screenshot for missing generated pattern screenshots", () => {
+  assert.equal(
+    rules.randomPatternScreenshot({
+      lineRequirement: "in",
+      shownMarkerPattern: "stack",
+      topOrb: "blue",
+    }),
+    null,
+  );
+});
+
 test("defines OT spread or stack out positions by line config", () => {
   assert.deepEqual(
     rules.correctBoxesFor({

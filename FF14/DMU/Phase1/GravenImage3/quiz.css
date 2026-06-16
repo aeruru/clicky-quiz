@@ -126,6 +126,18 @@
   display: none;
 }
 
+.pattern-screenshot {
+  display: block;
+  width: 100%;
+  border: 1px solid #334047;
+  border-radius: 6px;
+  background: #101315;
+}
+
+.pattern-screenshot[hidden] {
+  display: none;
+}
+
 .round-timer {
   display: flex;
   align-items: center;
