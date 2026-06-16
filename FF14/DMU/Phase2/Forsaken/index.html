@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CRNDL7GCQV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-CRNDL7GCQV');
+    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DMU Phase 2 Forsaken | Aerry Berry's Clicky Quizzes</title>
+    <link rel="stylesheet" href="../../../../styles.css">
+    <link rel="stylesheet" href="../../markers.css">
+    <link rel="stylesheet" href="../../Phase1/BigBoxArrows/quiz.css">
+    <link rel="stylesheet" href="../../Phase1/GravenImage3/quiz.css">
+    <link rel="stylesheet" href="quiz.css">
+  </head>
+  <body class="quiz-page">
+    <main class="quiz-shell" aria-labelledby="page-title">
+      <aside class="control-panel" aria-label="Quiz controls">
+        <div>
+          <p class="quiz-eyebrow">DMU Phase 2</p>
+          <h1 id="page-title">Forsaken</h1>
+          <p class="panel-copy">
+            Skeleton practice flow for Forsaken positioning. Rules are placeholders
+            while the mechanic logic is built out.
+          </p>
+          <section class="role-picker" aria-labelledby="role-picker-title">
+            <h2 id="role-picker-title">
+              Choose your role<span id="selected-role-label"></span>
+            </h2>
+            <div class="role-grid">
+              <button class="role-button" type="button" aria-label="MT" data-role="MT">
+                <img src="../../Phase1/GravenImage3/roles/shield-role.svg" alt="">
+                <span class="role-number">1</span>
+              </button>
+              <button class="role-button" type="button" aria-label="H1" data-role="H1">
+                <img src="../../Phase1/GravenImage3/roles/healer-role.svg" alt="">
+                <span class="role-number">1</span>
+              </button>
+              <button class="role-button" type="button" aria-label="M1" data-role="M1">
+                <img src="../../Phase1/GravenImage3/roles/fist-role.svg" alt="">
+                <span class="role-number">1</span>
+              </button>
+              <button class="role-button" type="button" aria-label="R1" data-role="R1">
+                <img src="../../Phase1/GravenImage3/roles/arrow-role.svg" alt="">
+                <span class="role-number">1</span>
+              </button>
+              <button class="role-button" type="button" aria-label="OT" data-role="OT">
+                <img src="../../Phase1/GravenImage3/roles/shield-role.svg" alt="">
+                <span class="role-number">2</span>
+              </button>
+              <button class="role-button" type="button" aria-label="H2" data-role="H2">
+                <img src="../../Phase1/GravenImage3/roles/healer-role.svg" alt="">
+                <span class="role-number">2</span>
+              </button>
+              <button class="role-button" type="button" aria-label="M2" data-role="M2">
+                <img src="../../Phase1/GravenImage3/roles/fist-role.svg" alt="">
+                <span class="role-number">2</span>
+              </button>
+              <button class="role-button" type="button" aria-label="R2" data-role="R2">
+                <img src="../../Phase1/GravenImage3/roles/arrow-role.svg" alt="">
+                <span class="role-number">2</span>
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <div class="round-stats" aria-label="Round statistics">
+          <p>Played: <span id="rounds-played">0</span></p>
+          <p>Win streak: <span id="win-streak">0</span></p>
+        </div>
+
+        <section class="timeline-panel" aria-labelledby="timeline-title">
+          <div class="timeline-panel-header">
+            <h2 id="timeline-title">Timeline</h2>
+            <button
+              class="advance-step-button"
+              id="advance-step-button"
+              type="button"
+            >
+              Next step
+            </button>
+            <div class="round-timer" id="round-timer" hidden>
+              Time: <span id="timer-count">8</span>
+            </div>
+          </div>
+          <ol class="mechanic-timeline" id="mechanic-timeline"></ol>
+        </section>
+
+        <a class="back-link" href="../../../../index.html">Back to quizzes</a>
+      </aside>
+
+      <section class="arena-card" aria-label="Arena layout">
+        <div class="arena-stage forsaken-stage">
+          <div class="forsaken-arena" id="forsaken-arena" aria-label="Forsaken arena without markers">
+            <img
+              class="forsaken-arena-image"
+              src="../p2-arena.png"
+              alt="DMU phase 2 circular arena without markers"
+            >
+            <img
+              class="boss-indicator"
+              src="assets/boss-indicator.svg"
+              alt="Boss indicator"
+            >
+            <div class="tower-layer" id="tower-layer" aria-hidden="true"></div>
+            <div class="role-marker-layer" id="role-marker-layer"></div>
+            <div class="spot-target-layer" id="spot-target-layer"></div>
+          </div>
+          <div class="arena-dialog start-overlay" id="start-overlay" hidden>
+            <p>Choose your role first</p>
+            <button id="start-button" type="button" disabled>Start</button>
+          </div>
+          <div class="round-result" id="round-result" hidden>
+            <p id="round-result-message"></p>
+            <button id="try-again-button" type="button">Try Again</button>
+          </div>
+        </div>
+      </section>
+      <aside class="credits-panel" aria-label="Credits">
+        <p>AI tooling: Codex &amp; GPT 5.5 on Medium</p>
+      </aside>
+    </main>
+    <script src="rules.js"></script>
+    <script src="quiz.js"></script>
+  </body>
+</html>

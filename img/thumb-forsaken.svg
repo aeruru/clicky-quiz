@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 168 104" role="img" aria-labelledby="title desc">
+  <title id="title">Forsaken arena preview</title>
+  <desc id="desc">A dark circular arena with green square targets and role markers.</desc>
+  <rect width="168" height="104" fill="#151a1e"/>
+  <circle cx="84" cy="52" r="42" fill="#263139" stroke="#65717a" stroke-width="2"/>
+  <circle cx="84" cy="52" r="18" fill="#20282e" stroke="#4a5960" stroke-width="1"/>
+  <g fill="none" stroke="#62e66f" stroke-width="3">
+    <rect x="79" y="7" width="10" height="10" rx="1"/>
+    <rect x="124" y="47" width="10" height="10" rx="1"/>
+    <rect x="79" y="87" width="10" height="10" rx="1"/>
+    <rect x="34" y="47" width="10" height="10" rx="1"/>
+  </g>
+  <g font-family="Inter, Segoe UI, sans-serif" font-size="8" font-weight="800" text-anchor="middle">
+    <circle cx="55" cy="23" r="9" fill="#9d4531"/>
+    <text x="55" y="26" fill="#fff">MT</text>
+    <circle cx="113" cy="23" r="9" fill="#2d80c6"/>
+    <text x="113" y="26" fill="#fff">H1</text>
+    <circle cx="113" cy="81" r="9" fill="#638735"/>
+    <text x="113" y="84" fill="#fff">M1</text>
+    <circle cx="55" cy="81" r="9" fill="#7d3fb8"/>
+    <text x="55" y="84" fill="#fff">R1</text>
+  </g>
+</svg>

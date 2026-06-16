@@ -1,0 +1,297 @@
+.timeline-panel {
+  display: grid;
+  gap: 10px;
+  min-height: 300px;
+  padding: 10px;
+  border: 1px solid #334047;
+  border-radius: 8px;
+  background: #171a1c;
+}
+
+.timeline-panel-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.timeline-panel h2 {
+  margin: 0;
+  color: #f7f4ec;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.advance-step-button {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid #4c5b62;
+  border-radius: 5px;
+  background: #20262a;
+  color: #f7f4ec;
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.advance-step-button:hover,
+.advance-step-button:focus-visible {
+  background: #334047;
+}
+
+.mechanic-timeline {
+  position: relative;
+  display: grid;
+  gap: 0;
+  max-height: 420px;
+  margin: 0;
+  padding: 2px 0 2px 8px;
+  overflow: auto;
+  list-style: none;
+}
+
+.mechanic-timeline::before {
+  content: "";
+  position: absolute;
+  left: 23px;
+  top: 18px;
+  bottom: 18px;
+  width: 3px;
+  border-radius: 999px;
+  background: linear-gradient(#56656d, #3d4d55);
+}
+
+.timeline-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  min-height: 35px;
+  padding: 3px 6px 3px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #bfc8cc;
+}
+
+.timeline-step-index {
+  display: grid;
+  width: 24px;
+  aspect-ratio: 1;
+  place-items: center;
+  justify-self: center;
+  border-radius: 50%;
+  border: 2px solid #6a7a82;
+  background: #20262a;
+  color: #f7f4ec;
+  font-size: 0.66rem;
+  font-weight: 900;
+  line-height: 1;
+  z-index: 1;
+}
+
+.timeline-step-label {
+  min-width: 0;
+  color: #dce5e8;
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.timeline-step-time {
+  color: #bfc8cc;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.timeline-step-active {
+  color: #f8d66d;
+}
+
+.timeline-step-active .timeline-step-index {
+  width: 30px;
+  border-color: #f8d66d;
+  background: #b85732;
+  box-shadow:
+    0 0 0 3px rgba(248, 214, 109, 0.18),
+    0 0 14px rgba(248, 214, 109, 0.4);
+}
+
+.timeline-step-active .timeline-step-label,
+.timeline-step-active .timeline-step-time {
+  color: #f8d66d;
+}
+
+.timeline-step-complete {
+  opacity: 0.64;
+}
+
+.timeline-step-complete .timeline-step-index {
+  border-color: #62e66f;
+  background: #31553b;
+  color: #d8ffde;
+}
+
+.forsaken-stage {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(248, 214, 109, 0.08), transparent 30%),
+    #11161a;
+}
+
+.forsaken-arena {
+  position: relative;
+  width: min(92vmin, 760px);
+  aspect-ratio: 1;
+  margin: auto;
+}
+
+.forsaken-arena-image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  object-fit: contain;
+  filter: drop-shadow(0 24px 54px rgba(0, 0, 0, 0.26));
+  pointer-events: none;
+}
+
+.boss-indicator {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  width: clamp(220px, 46%, 360px);
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 14px rgba(0, 0, 0, 0.72));
+  opacity: 0.88;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.role-marker,
+.tower-indicator,
+.spot-target {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  transform: translate(-50%, -50%);
+}
+
+.role-marker {
+  display: grid;
+  justify-items: center;
+  width: clamp(38px, 7.2%, 58px);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.role-marker-icon {
+  position: relative;
+  width: 100%;
+}
+
+.role-marker-icon img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 8px;
+}
+
+.role-marker-number {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  display: grid;
+  min-width: 14px;
+  height: 14px;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(20, 14, 10, 0.82);
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.debuff-icon {
+  display: block;
+  width: clamp(22px, 48%, 32px);
+  aspect-ratio: 1;
+  margin-top: 3px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.75));
+}
+
+.debuff-icon-cone {
+  width: clamp(24px, 54%, 36px);
+}
+
+.debuff-icon-spread {
+  width: clamp(18px, 42%, 28px);
+}
+
+.tower-indicator {
+  width: clamp(86px, 22%, 144px);
+  aspect-ratio: 1;
+  border: clamp(6px, 1.1vmin, 10px) solid #ffffff;
+  border-radius: 50%;
+  box-shadow:
+    0 0 12px rgba(255, 255, 255, 0.36),
+    inset 0 0 16px rgba(255, 255, 255, 0.16);
+  opacity: 0.94;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.spot-target {
+  display: grid;
+  width: clamp(26px, 5.2%, 42px);
+  min-height: 0;
+  aspect-ratio: 1;
+  place-items: center;
+  padding: 0;
+  border: 2px solid #62e66f;
+  border-radius: 5px;
+  background: rgba(23, 26, 28, 0.46);
+  box-shadow:
+    0 0 10px rgba(98, 230, 111, 0.78),
+    inset 0 0 12px rgba(98, 230, 111, 0.24);
+  color: transparent;
+  font-size: 0;
+  z-index: 3;
+}
+
+.spot-target:hover,
+.spot-target:focus-visible {
+  background: rgba(98, 230, 111, 0.28);
+}
+
+.spot-target:disabled {
+  cursor: default;
+  opacity: 0.38;
+}
+
+.spot-target-selected {
+  background: rgba(98, 230, 111, 0.35);
+}
+
+.spot-target-wrong {
+  border-color: #ff4f5e;
+  background: rgba(255, 79, 94, 0.32);
+}
+
+.spot-target-correct {
+  border-width: 4px;
+  border-color: #62e66f;
+  background: rgba(98, 230, 111, 0.28);
+}
+
+@media (max-width: 760px) {
+  .mechanic-timeline {
+    max-height: none;
+  }
+}
