@@ -8,6 +8,7 @@ const roundsPlayed = document.querySelector("#rounds-played");
 const winStreak = document.querySelector("#win-streak");
 const flipArrows = document.querySelector("#flip-arrows");
 const rotateArena = document.querySelector("#rotate-arena");
+const differentArrowsOnly = document.querySelector("#different-arrows-only");
 const arenaRotator = document.querySelector("#arena-rotator");
 const boxTargets = [...document.querySelectorAll(".box-target")];
 
@@ -104,7 +105,9 @@ function orderedClickArrows() {
 }
 
 function randomCombo() {
-  return rules.randomCombo(game.previousComboKey);
+  return rules.randomCombo(game.previousComboKey, Math.random, {
+    differentOnly: differentArrowsOnly.checked,
+  });
 }
 
 function isCorrectBox(box, arrow) {

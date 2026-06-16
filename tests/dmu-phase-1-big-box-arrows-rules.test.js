@@ -40,6 +40,21 @@ test("removes the previous combo from the next random pool", () => {
   assert.equal(availableKeys.includes("N+E"), true);
 });
 
+test("can limit available combos to different arrows", () => {
+  const availableKeys = rules
+    .availableCombos("W+N", { differentOnly: true })
+    .map(rules.comboKey);
+
+  assert.deepEqual([...new Set(availableKeys)], ["N+E", "E+S", "S+W"]);
+});
+
+test("can generate only different-arrow combos", () => {
+  const combo = rules.randomCombo("W+N", () => 0.99, { differentOnly: true });
+
+  assert.equal(combo[0] !== combo[1], true);
+  assert.notEqual(rules.comboKey(combo), "W+N");
+});
+
 test("validates same-arrow target boxes", () => {
   assert.equal(rules.isCorrectBox("N+N", 14, "N"), true);
   assert.equal(rules.isCorrectBox("N+N", 15, "N"), true);

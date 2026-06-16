@@ -44,9 +44,11 @@
     return combo.join("+");
   }
 
-  function availableCombos(previousComboKey) {
+  function availableCombos(previousComboKey, options = {}) {
     return weightedArrowCombos.filter(
-      (combo) => comboKey(combo) !== previousComboKey,
+      (combo) =>
+        comboKey(combo) !== previousComboKey &&
+        (!options.differentOnly || combo[0] !== combo[1]),
     );
   }
 
@@ -72,9 +74,12 @@
     return target[direction] === clickedBox;
   }
 
-  function randomCombo(previousComboKey, random = Math.random) {
-    const options = availableCombos(previousComboKey);
-    const pool = options.length > 0 ? options : weightedArrowCombos;
+  function randomCombo(previousComboKey, random = Math.random, options = {}) {
+    const filteredCombos = options.differentOnly
+      ? weightedArrowCombos.filter((combo) => combo[0] !== combo[1])
+      : weightedArrowCombos;
+    const availableOptions = availableCombos(previousComboKey, options);
+    const pool = availableOptions.length > 0 ? availableOptions : filteredCombos;
 
     return pool[Math.floor(random() * pool.length)];
   }
