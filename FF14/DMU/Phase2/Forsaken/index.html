@@ -68,6 +68,21 @@
               </button>
             </div>
           </section>
+          <label
+            class="option-toggle"
+            title="Hide timeline labels and step numbers."
+          >
+            <input id="hide-timeline-details" type="checkbox">
+            <span>Hide timeline text</span>
+          </label>
+          <button
+            class="panel-start-button"
+            id="new-round-button"
+            type="button"
+            disabled
+          >
+            New round
+          </button>
         </div>
 
         <div class="round-stats" aria-label="Round statistics">
@@ -86,7 +101,7 @@
               Next step
             </button>
             <div class="round-timer" id="round-timer" hidden>
-              Time: <span id="timer-count">8</span>
+              Time: <span id="timer-count">5</span>
             </div>
           </div>
           <ol class="mechanic-timeline" id="mechanic-timeline"></ol>
@@ -111,14 +126,21 @@
             <div class="tower-layer" id="tower-layer" aria-hidden="true"></div>
             <div class="role-marker-layer" id="role-marker-layer"></div>
             <div class="spot-target-layer" id="spot-target-layer"></div>
+            <div class="bait-cast" id="bait-cast" hidden>
+              <span id="bait-cast-label"></span>
+              <span class="bait-cast-progress"></span>
+            </div>
           </div>
           <div class="arena-dialog start-overlay" id="start-overlay" hidden>
             <p>Choose your role first</p>
-            <button id="start-button" type="button" disabled>Start</button>
+            <button id="start-button" type="button" disabled>Start Forsaken</button>
           </div>
           <div class="round-result" id="round-result" hidden>
             <p id="round-result-message"></p>
-            <button id="try-again-button" type="button">Try Again</button>
+            <div class="result-actions">
+              <button id="try-again-button" type="button">Try Again</button>
+              <button id="continue-button" type="button" hidden>Continue</button>
+            </div>
           </div>
         </div>
       </section>

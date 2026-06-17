@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
   <title id="title">Boss indicator</title>
-  <desc id="desc">A beige targeting ring around a glowing orange boss face.</desc>
+  <desc id="desc">A beige targeting ring around a faerie marker.</desc>
   <defs>
     <filter id="soft-shadow" x="-30%" y="-30%" width="160%" height="160%">
       <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.48"/>
@@ -19,46 +19,18 @@
     fill="none"
     stroke="#d9ccad"
     stroke-linecap="butt"
-    stroke-width="12"
+    stroke-width="5"
   />
-  <path d="M68 141h24l-12 17z" fill="#d9ccad"/>
+  <path d="M74 145h12l-6 9z" fill="#d9ccad"/>
 
-  <g filter="url(#soft-shadow)">
-    <path
-      d="M33 57 50 42l25 19 5 17-14 23-29 10 10-30z"
-      fill="#080909"
-    />
-    <path
-      d="m127 57-17-15-25 19-5 17 14 23 29 10-10-30z"
-      fill="#080909"
-    />
-    <path
-      d="M47 92 61 75h38l14 17-10 16H57z"
-      fill="#090909"
-    />
-  </g>
-
-  <g filter="url(#glow)">
-    <path
-      d="m47 61 12 9 23 4-8 14-22-5z"
-      fill="#fff2bf"
-      stroke="#ff9a24"
-      stroke-linejoin="round"
-      stroke-width="4"
-    />
-    <path
-      d="m113 61-12 9-23 4 8 14 22-5z"
-      fill="#fff2bf"
-      stroke="#ff9a24"
-      stroke-linejoin="round"
-      stroke-width="4"
-    />
-    <path
-      d="M57 97h14l4-7 5 7 5-7 4 7h14l-7 9H64z"
-      fill="#fff2bf"
-      stroke="#ff9a24"
-      stroke-linejoin="round"
-      stroke-width="4"
-    />
-  </g>
+  <text
+    x="80"
+    y="80"
+    dominant-baseline="middle"
+    fill="#ffffff"
+    filter="url(#soft-shadow)"
+    font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji, sans-serif"
+    font-size="70"
+    text-anchor="middle"
+  >🧚‍♂️</text>
 </svg>
