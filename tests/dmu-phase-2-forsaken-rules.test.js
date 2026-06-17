@@ -167,8 +167,8 @@ test("moves role markers into the tower layout after the opening step", () => {
 
 test("shows two tower indicators for tower steps", () => {
   assert.deepEqual(rules.towerSpotsForStep(0), []);
-  assert.deepEqual(rules.towerSpotsForStep(1), ["tower-cw", "tower-ccw"]);
-  assert.deepEqual(rules.towerSpotsForStep(3), ["tower-cw", "tower-ccw"]);
+  assert.deepEqual(rules.towerSpotsForStep(1), ["tower-left", "tower-right"]);
+  assert.deepEqual(rules.towerSpotsForStep(3), ["tower-left", "tower-right"]);
 });
 
 test("labels tower sets as odd or even by tower order", () => {
@@ -317,14 +317,14 @@ test("assigns first tower set positions from opening debuffs", () => {
   };
 
   assert.deepEqual(rules.roleSpotAssignmentsForTowerStep(1, openingDebuffs), {
-    MT: "odd-bait-cw",
+    MT: "odd-tower-stack-left",
     H1: "odd-spread-even-spread",
-    M2: "odd-bait-ccw",
+    M2: "odd-tower-stack-right",
     R2: "odd-cone-even-spread",
-    OT: "stack-bait-cw",
+    OT: "odd-stack-bait-left",
     H2: "odd-cone-bait",
-    M1: "stack-bait-ccw",
-    R1: "stack-bait-ccw",
+    M1: "odd-stack-bait-right ",
+    R1: "odd-stack-bait-right ",
   });
 });
 
@@ -349,14 +349,14 @@ test("assigns second tower set default support-left and DPS-right positions", ()
   assert.deepEqual(
     rules.roleSpotAssignmentsForTowerStep(2, openingDebuffs, currentDebuffs),
     {
-      MT: "even-cone-cw",
+      MT: "even-cone-left",
       H1: "odd-cone-even-spread",
-      M2: "even-cone-ccw",
+      M2: "even-cone-right",
       R2: "odd-spread-even-spread",
-      OT: "even-melee-bait-cw",
-      H2: "even-cone-bait-cw",
-      M1: "even-melee-bait-ccw",
-      R1: "even-cone-bait-ccw",
+      OT: "even-melee-bait-left",
+      H2: "even-cone-bait-left",
+      M1: "even-melee-bait-right",
+      R1: "even-cone-bait-right",
     },
   );
 });
@@ -382,14 +382,14 @@ test("flexes tank and melee on second tower set when pairs match debuffs", () =>
   assert.deepEqual(
     rules.roleSpotAssignmentsForTowerStep(2, openingDebuffs, currentDebuffs),
     {
-      H1: "even-cone-cw",
-      MT: "even-cone-ccw",
+      H1: "even-cone-left",
+      MT: "even-cone-right",
       M2: "odd-cone-even-spread",
       R2: "odd-spread-even-spread",
-      OT: "even-melee-bait-cw",
-      H2: "even-cone-bait-cw",
-      M1: "even-melee-bait-ccw",
-      R1: "even-cone-bait-ccw",
+      OT: "even-melee-bait-left",
+      H2: "even-cone-bait-left",
+      M1: "even-melee-bait-right",
+      R1: "even-cone-bait-right",
     },
   );
 });
@@ -415,14 +415,14 @@ test("flexes melee and ranged odd-stack positions when DPS both have stack", () 
   assert.deepEqual(
     rules.roleSpotAssignmentsForTowerStep(4, openingDebuffs, currentDebuffs),
     {
-      M2: "odd-bait-cw",
-      R2: "odd-bait-ccw",
+      M2: "odd-tower-stack-left",
+      R2: "odd-tower-stack-right",
       MT: "odd-spread-even-spread",
       H1: "odd-cone-even-spread",
-      OT: "stack-bait-cw",
+      OT: "odd-stack-bait-left",
       H2: "odd-cone-bait",
-      M1: "stack-bait-ccw",
-      R1: "stack-bait-ccw",
+      M1: "odd-stack-bait-right ",
+      R1: "odd-stack-bait-right ",
     },
   );
 });
@@ -448,14 +448,14 @@ test("flexes tank and healer odd-stack positions when support both have stack", 
   assert.deepEqual(
     rules.roleSpotAssignmentsForTowerStep(4, openingDebuffs, currentDebuffs),
     {
-      H1: "odd-bait-cw",
-      MT: "odd-bait-ccw",
+      H1: "odd-tower-stack-left",
+      MT: "odd-tower-stack-right",
       M2: "odd-spread-even-spread",
       R2: "odd-cone-even-spread",
-      OT: "stack-bait-cw",
+      OT: "odd-stack-bait-left",
       H2: "odd-cone-bait",
-      M1: "stack-bait-ccw",
-      R1: "stack-bait-ccw",
+      M1: "odd-stack-bait-right ",
+      R1: "odd-stack-bait-right ",
     },
   );
 });
@@ -551,26 +551,26 @@ test("generates rotated tower layouts with fixed tower spacing", () => {
   const baseLayout = rules.generateTowerLayout(sequenceRandom([0]));
   const rotatedLayout = rules.generateTowerLayout(sequenceRandom([0.25]));
   const baseDistance = distance(
-    baseLayout.spots["tower-cw"],
-    baseLayout.spots["tower-ccw"],
+    baseLayout.spots["tower-left"],
+    baseLayout.spots["tower-right"],
   );
   const rotatedDistance = distance(
-    rotatedLayout.spots["tower-cw"],
-    rotatedLayout.spots["tower-ccw"],
+    rotatedLayout.spots["tower-left"],
+    rotatedLayout.spots["tower-right"],
   );
 
   assert.equal(baseLayout.bossRotationDegrees, 0);
   assert.equal(rotatedLayout.bossRotationDegrees, 90);
   assert.equal(baseDistance, 30);
   assert.equal(rotatedDistance, 30);
-  assert.deepEqual(baseLayout.spots["tower-cw"], {
-    id: "tower-cw",
+  assert.deepEqual(baseLayout.spots["tower-left"], {
+    id: "tower-left",
     label: "Clockwise tower",
     x: 35,
     y: 63,
   });
-  assert.deepEqual(rotatedLayout.spots["tower-cw"], {
-    id: "tower-cw",
+  assert.deepEqual(rotatedLayout.spots["tower-left"], {
+    id: "tower-left",
     label: "Clockwise tower",
     x: 37,
     y: 35,
@@ -598,19 +598,19 @@ test("defines reusable tower and bait green squares", () => {
 const expectedTowerBaitSpotIds = [
   "bait-back",
   "bait-between",
-  "odd-bait-cw",
-  "odd-bait-ccw",
+  "odd-tower-stack-left",
+  "odd-tower-stack-right",
   "odd-cone-even-spread",
   "odd-spread-even-spread",
-  "stack-bait-cw",
-  "stack-bait-ccw",
+  "odd-stack-bait-left",
+  "odd-stack-bait-right ",
   "odd-cone-bait",
-  "even-cone-cw",
-  "even-cone-ccw",
-  "even-cone-bait-cw",
-  "even-cone-bait-ccw",
-  "even-melee-bait-cw",
-  "even-melee-bait-ccw",
+  "even-cone-left",
+  "even-cone-right",
+  "even-cone-bait-left",
+  "even-cone-bait-right",
+  "even-melee-bait-left",
+  "even-melee-bait-right",
 ];
 
 function sequenceRandom(values) {

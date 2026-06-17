@@ -19,23 +19,23 @@
     { id: "m1-r1", roles: ["M1", "R1"] },
     { id: "m2-r2", roles: ["M2", "R2"] },
   ];
-  const defaultTowerSpots = ["tower-cw", "tower-ccw"];
+  const defaultTowerSpots = ["tower-left", "tower-right"];
   const towerBaitSpotIds = [
     "bait-back",
     "bait-between",
-    "odd-bait-cw",
-    "odd-bait-ccw",
+    "odd-tower-stack-left",
+    "odd-tower-stack-right",
     "odd-cone-even-spread",
     "odd-spread-even-spread",
-    "stack-bait-cw",
-    "stack-bait-ccw",
+    "odd-stack-bait-left",
+    "odd-stack-bait-right ",
     "odd-cone-bait",
-    "even-cone-cw",
-    "even-cone-ccw",
-    "even-cone-bait-cw",
-    "even-cone-bait-ccw",
-    "even-melee-bait-cw",
-    "even-melee-bait-ccw",
+    "even-cone-left",
+    "even-cone-right",
+    "even-cone-bait-left",
+    "even-cone-bait-right",
+    "even-melee-bait-left",
+    "even-melee-bait-right",
   ];
   const towerLayoutSpotIds = [...defaultTowerSpots, ...towerBaitSpotIds];
   const baitCastOptions = [
@@ -147,33 +147,33 @@
     { id: "west", label: "West", x: 11, y: 50 },
     { id: "northwest", label: "Northwest", x: 22, y: 22 },
     { id: "center", label: "Center", x: 50, y: 50 },
-    { id: "opening-support-1", label: "Support opening 1", x: 18, y: 35 },
-    { id: "opening-support-2", label: "Support opening 2", x: 28, y: 35 },
-    { id: "opening-support-3", label: "Support opening 3", x: 18, y: 53 },
-    { id: "opening-support-4", label: "Support opening 4", x: 28, y: 53 },
-    { id: "opening-dps-1", label: "DPS opening 1", x: 72, y: 35 },
-    { id: "opening-dps-2", label: "DPS opening 2", x: 82, y: 35 },
-    { id: "opening-dps-3", label: "DPS opening 3", x: 72, y: 53 },
-    { id: "opening-dps-4", label: "DPS opening 4", x: 82, y: 53 },
+    { id: "opening-support-1", label: "Support opening 1", x: 12, y: 43 },
+    { id: "opening-support-2", label: "Support opening 2", x: 22, y: 43 },
+    { id: "opening-support-3", label: "Support opening 3", x: 12, y: 57 },
+    { id: "opening-support-4", label: "Support opening 4", x: 22, y: 57 },
+    { id: "opening-dps-1", label: "DPS opening 1", x: 78, y: 43 },
+    { id: "opening-dps-2", label: "DPS opening 2", x: 88, y: 43 },
+    { id: "opening-dps-3", label: "DPS opening 3", x: 78, y: 57 },
+    { id: "opening-dps-4", label: "DPS opening 4", x: 88, y: 57 },
   ];
   const towerLayoutBaseSpots = [
-    { id: "tower-cw", label: "Clockwise tower", x: 35, y: 63 },
-    { id: "tower-ccw", label: "Counterclockwise tower", x: 65, y: 63 },
+    { id: "tower-left", label: "Left tower", x: 35, y: 63 },
+    { id: "tower-right", label: "Right tower", x: 65, y: 63 },
     { id: "bait-back", label: "Bait back", x: 50, y: 27 },
-    { id: "bait-between", label: "Bait between", x: 50, y: 63 },
-    { id: "odd-bait-cw", label: "Odd bait clockwise tower", x: 35, y: 53 },
-    { id: "odd-bait-ccw", label: "Odd bait counterclockwise tower", x: 65, y: 53 },
-    { id: "odd-cone-even-spread", label: "Odd cone / even spread", x: 35, y: 73 },
-    { id: "odd-spread-even-spread", label: "Odd spread / even spread", x: 65, y: 73 },
-    { id: "stack-bait-cw", label: "Stack bait clockwise", x: 41, y: 60 },
-    { id: "stack-bait-ccw", label: "Stack bait counterclockwise", x: 59, y: 60 },
-    { id: "odd-cone-bait", label: "Odd cone bait", x: 20, y: 65 },
-    { id: "even-cone-cw", label: "Even cone clockwise", x: 28, y: 56 },
-    { id: "even-cone-ccw", label: "Even cone counterclockwise", x: 72, y: 56 },
-    { id: "even-cone-bait-cw", label: "Even cone bait clockwise", x: 21, y: 63 },
-    { id: "even-cone-bait-ccw", label: "Even cone bait counterclockwise", x: 79, y: 63 },
-    { id: "even-melee-bait-cw", label: "Even melee bait clockwise", x: 32, y: 43 },
-    { id: "even-melee-bait-ccw", label: "Even melee bait counterclockwise", x: 68, y: 43 },
+    { id: "bait-between", label: "Bait between", x: 50, y: 68 },
+    { id: "odd-tower-stack-left", label: "Left odd tower stack", x: 36, y: 62 },
+    { id: "odd-tower-stack-right", label: "Right odd tower stack", x: 65, y: 61 },
+    { id: "odd-cone-even-spread", label: "Left odd tower cone / Left even tower spread", x: 36, y: 68 },
+    { id: "odd-spread-even-spread", label: "Right odd tower spread / Right even tower spread", x: 64, y: 68 },
+    { id: "odd-stack-bait-left", label: "Stack bait left", x: 41, y: 52 },
+    { id: "odd-stack-bait-right ", label: "Stack bait right", x: 59, y: 52 },
+    { id: "odd-cone-bait", label: "Odd cone bait", x: 36, y: 76 },
+    { id: "even-cone-left", label: "Left even tower cone ", x: 33, y: 55 },
+    { id: "even-cone-right", label: "Right even tower cone", x: 67, y: 55 },
+    { id: "even-cone-bait-left", label: "Left even tower cone bait", x: 21, y: 59 },
+    { id: "even-cone-bait-right", label: "Right even tower cone bait", x: 79, y: 59 },
+    { id: "even-melee-bait-left", label: "Left even tower side melee bait", x: 35, y: 35 },
+    { id: "even-melee-bait-right", label: "Right even tower side melee bait", x: 65, y: 35 },
   ];
   const arenaSpots = [...staticArenaSpots, ...towerLayoutBaseSpots];
 
@@ -188,14 +188,14 @@
     { roles: ["R2"], spot: "opening-dps-4", debuff: "spread" },
   ];
   const towerBaitRolePlacements = [
-    { roles: ["H1"], spot: "odd-bait-cw", debuff: "spread" },
+    { roles: ["H1"], spot: "odd-tower-stack-left", debuff: "spread" },
     { roles: ["M1"], spot: "odd-cone-even-spread", debuff: "cone" },
-    { roles: ["R1"], spot: "even-cone-bait-cw", debuff: "spread" },
+    { roles: ["R1"], spot: "even-cone-bait-left", debuff: "spread" },
     { roles: ["H2"], spot: "odd-cone-bait", debuff: "spread" },
-    { roles: ["MT"], spot: "odd-bait-ccw", debuff: "stack" },
-    { roles: ["M2", "R2"], spot: "even-cone-ccw", debuff: "cone" },
+    { roles: ["MT"], spot: "odd-tower-stack-right", debuff: "stack" },
+    { roles: ["M2", "R2"], spot: "even-cone-right", debuff: "cone" },
     { roles: ["OT"], spot: "odd-spread-even-spread", debuff: "stack" },
-    { roles: ["R1", "R2"], spot: "even-cone-bait-ccw", debuff: "spread" },
+    { roles: ["R1", "R2"], spot: "even-cone-bait-right", debuff: "spread" },
   ];
 
   function stepByIndex(stepIndex) {
@@ -225,7 +225,8 @@
   }
 
   function generateTowerLayout(random = Math.random) {
-    const rotationDegrees = random() * 360;
+    // const rotationDegrees = random() * 360;
+    const rotationDegrees = 0;
     const spots = Object.fromEntries(
       towerLayoutBaseSpots.map((spot) => {
         const rotatedSpot = rotateSpot(spot, rotationDegrees);
@@ -403,11 +404,11 @@
 
     baitRoles.forEach((role) => {
       if (isTankRole(role)) {
-        assignments[role] = "stack-bait-cw";
+        assignments[role] = "odd-stack-bait-left";
       } else if (isHealerRole(role)) {
         assignments[role] = "odd-cone-bait";
       } else if (isDpsRole(role)) {
-        assignments[role] = "stack-bait-ccw";
+        assignments[role] = "odd-stack-bait-right ";
       }
     });
 
@@ -423,17 +424,17 @@
     );
 
     if (supportStackRoles.length === 1) {
-      assignments[supportStackRoles[0]] = "odd-bait-cw";
+      assignments[supportStackRoles[0]] = "odd-tower-stack-left";
     } else if (supportStackRoles.length === 2) {
-      assignments[supportStackRoles.find(isHealerRole)] = "odd-bait-cw";
-      assignments[supportStackRoles.find(isTankRole)] = "odd-bait-ccw";
+      assignments[supportStackRoles.find(isHealerRole)] = "odd-tower-stack-left";
+      assignments[supportStackRoles.find(isTankRole)] = "odd-tower-stack-right";
     }
 
     if (dpsStackRoles.length === 1) {
-      assignments[dpsStackRoles[0]] = "odd-bait-ccw";
+      assignments[dpsStackRoles[0]] = "odd-tower-stack-right";
     } else if (dpsStackRoles.length === 2) {
-      assignments[dpsStackRoles.find(isMeleeRole)] = "odd-bait-cw";
-      assignments[dpsStackRoles.find(isRangedRole)] = "odd-bait-ccw";
+      assignments[dpsStackRoles.find(isMeleeRole)] = "odd-tower-stack-left";
+      assignments[dpsStackRoles.find(isRangedRole)] = "odd-tower-stack-right";
     }
   }
 
@@ -494,20 +495,20 @@
   function assignEvenTowerBaitRoles(assignments, baitRoles) {
     baitRoles.forEach((role) => {
       if (isTankRole(role)) {
-        assignments[role] = "even-melee-bait-cw";
+        assignments[role] = "even-melee-bait-left";
       } else if (isHealerRole(role)) {
-        assignments[role] = "even-cone-bait-cw";
+        assignments[role] = "even-cone-bait-left";
       } else if (isMeleeRole(role)) {
-        assignments[role] = "even-melee-bait-ccw";
+        assignments[role] = "even-melee-bait-right";
       } else if (isRangedRole(role)) {
-        assignments[role] = "even-cone-bait-ccw";
+        assignments[role] = "even-cone-bait-right";
       }
     });
   }
 
   function evenTowerSpotFor(side, debuff) {
     if (debuff === "cone") {
-      return side === "cw" ? "even-cone-cw" : "even-cone-ccw";
+      return side === "cw" ? "even-cone-left" : "even-cone-right";
     }
 
     return side === "cw" ? "odd-cone-even-spread" : "odd-spread-even-spread";

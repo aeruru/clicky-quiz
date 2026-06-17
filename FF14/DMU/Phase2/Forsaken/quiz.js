@@ -255,7 +255,6 @@ function renderBossIndicator() {
     : towerLayout?.bossRotationDegrees || 0;
 
   bossIndicator.style.setProperty("--boss-rotation", `${rotationDegrees}deg`);
-  bossIndicator.style.setProperty("--boss-center-offset", "-1.5%");
 }
 
 function renderTowers() {
@@ -358,7 +357,15 @@ function renderCurrentStep() {
 
 function renderOverlays() {
   roundTimer.hidden = !isSolvingPhase();
-  startOverlay.hidden = !isPrepPhase();
+  startOverlay.hidden = !isIdlePhase() && !isPrepPhase();
+
+  if (isIdlePhase()) {
+    startOverlayMessage.textContent = game.selectedRole
+      ? "Ready"
+      : "Choose your role first";
+    startButton.textContent = "Start";
+    startButton.disabled = !game.selectedRole;
+  }
 
   if (isPrepPhase()) {
     startOverlayMessage.textContent = "Review your debuffs";
@@ -382,6 +389,7 @@ function selectRole(role) {
     finishRound(false, `Role changed to ${role}.`);
   } else {
     result.hidden = true;
+    renderCurrentStep();
   }
 }
 
@@ -437,6 +445,13 @@ function advanceStep() {
 }
 
 function previewNextStep() {
+  if (isRevealPhase()) {
+    result.hidden = true;
+    continueButton.hidden = true;
+    advanceStep();
+    return;
+  }
+
   stopTimer();
   stopRevealTimer();
   result.hidden = true;
@@ -466,13 +481,11 @@ function startStepTimer() {
   renderCurrentStep();
 
   game.timerId = window.setInterval(() => {
-    const step = rules.stepByIndex(game.currentStepIndex);
-
     game.timeRemaining -= 1;
     updateTimer();
 
     if (game.timeRemaining <= 0) {
-      showIncorrectReveal(`Time's up. ${correctSpotExplanation()}`);
+      showCorrectReveal();
     }
   }, 1000);
 }
@@ -512,13 +525,19 @@ function startForsaken() {
   startStepTimer();
 }
 
+function handleStartButtonClick() {
+  if (isPrepPhase()) {
+    startForsaken();
+    return;
+  }
+
+  startRound();
+}
+
 function showCorrectReveal() {
   prepareRevealState(false);
   renderCurrentStep();
   revealCorrectSpot(false);
-  game.revealTimerId = window.setTimeout(() => {
-    advanceStep();
-  }, 3000);
 }
 
 function showIncorrectReveal(message) {
@@ -555,18 +574,18 @@ function prepareRevealState(wasWrong) {
 
 function rolesInsideTowers(assignments) {
   return Object.entries(assignments)
-    .filter(([, spotId]) => spotId === "tower-cw" || spotId === "tower-ccw" || isInsideTowerSpot(spotId))
+    .filter(([, spotId]) => spotId === "tower-left" || spotId === "tower-right" || isInsideTowerSpot(spotId))
     .map(([role]) => role);
 }
 
 function isInsideTowerSpot(spotId) {
   return [
-    "odd-bait-cw",
-    "odd-bait-ccw",
+    "odd-tower-stack-left",
+    "odd-tower-stack-right",
     "odd-cone-even-spread",
     "odd-spread-even-spread",
-    "even-cone-cw",
-    "even-cone-ccw",
+    "even-cone-left",
+    "even-cone-right",
   ].includes(spotId);
 }
 
@@ -620,7 +639,7 @@ roleButtons.forEach((button) => {
   });
 });
 newRoundButton.addEventListener("click", startRound);
-startButton.addEventListener("click", startForsaken);
+startButton.addEventListener("click", handleStartButtonClick);
 tryAgainButton.addEventListener("click", startRound);
 continueButton.addEventListener("click", continueAfterIncorrect);
 advanceStepButton.addEventListener("click", previewNextStep);
@@ -629,4 +648,3 @@ hideTimelineDetails.addEventListener("change", updateTimelineDetailMode);
 updateTimelineDetailMode();
 updateStats();
 renderCurrentStep();
-startOverlay.hidden = true;

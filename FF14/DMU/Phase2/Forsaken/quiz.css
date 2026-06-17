@@ -202,7 +202,7 @@
   top: 50%;
   display: block;
   width: clamp(220px, 46%, 360px);
-  transform: translate(-50%, -50%) translateY(var(--boss-center-offset, 0%)) rotate(var(--boss-rotation, 0deg));
+  transform: translate(-50%, -50%) rotate(var(--boss-rotation, 0deg));
   transform-origin: 50% 50%;
   filter: drop-shadow(0 0 14px rgba(0, 0, 0, 0.72));
   opacity: 0.88;
@@ -281,6 +281,10 @@
   filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.75));
   transform: translateX(-50%);
   z-index: 2;
+}
+
+.debuff-icon-cone {
+  transform: translateX(-50%) rotate(180deg);
 }
 
 .tower-indicator {
