@@ -22,6 +22,8 @@
     "laf-stack-lie-in-3.png",
     "laf-stack-lie-out-1.png",
     "laf-stack-lie-out-2.png",
+    "laf-stack-truth-in-1.png",
+    "laf-stack-truth-in-2.png",
   ];
   const stackOutSpots = {
     dps: {
