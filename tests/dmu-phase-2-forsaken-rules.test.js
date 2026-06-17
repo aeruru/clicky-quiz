@@ -530,29 +530,36 @@ test("labels tower-relative green squares for mechanic references", () => {
     [
       "Bait back",
       "Bait between",
-      "Odd bait clockwise tower",
-      "Odd bait counterclockwise tower",
-      "Odd cone / even spread",
-      "Odd spread / even spread",
-      "Stack bait clockwise",
-      "Stack bait counterclockwise",
+      "Left odd tower stack",
+      "Right odd tower stack",
+      "Left odd tower cone / Left even tower spread",
+      "Right odd tower spread / Right even tower spread",
+      "Stack bait left",
+      "Stack bait right",
       "Odd cone bait",
-      "Even cone clockwise",
-      "Even cone counterclockwise",
-      "Even cone bait clockwise",
-      "Even cone bait counterclockwise",
-      "Even melee bait clockwise",
-      "Even melee bait counterclockwise",
+      "Left even tower cone ",
+      "Right even tower cone",
+      "Left even tower cone bait",
+      "Right even tower cone bait",
+      "Left even tower side melee bait",
+      "Right even tower side melee bait",
     ],
   );
 });
 
-test("generates rotated tower layouts with fixed tower spacing", () => {
+test("generates tower layouts with fixed tower spacing", () => {
   const baseLayout = rules.generateTowerLayout(sequenceRandom([0]));
-  const rotatedLayout = rules.generateTowerLayout(sequenceRandom([0.25]));
+  const fixedLayout = rules.generateTowerLayout(sequenceRandom([0.25]));
+  const rotatedLayout = rules.generateTowerLayout(sequenceRandom([0.25]), {
+    rotateTowers: true,
+  });
   const baseDistance = distance(
     baseLayout.spots["tower-left"],
     baseLayout.spots["tower-right"],
+  );
+  const fixedDistance = distance(
+    fixedLayout.spots["tower-left"],
+    fixedLayout.spots["tower-right"],
   );
   const rotatedDistance = distance(
     rotatedLayout.spots["tower-left"],
@@ -560,18 +567,26 @@ test("generates rotated tower layouts with fixed tower spacing", () => {
   );
 
   assert.equal(baseLayout.bossRotationDegrees, 0);
+  assert.equal(fixedLayout.bossRotationDegrees, 0);
   assert.equal(rotatedLayout.bossRotationDegrees, 90);
   assert.equal(baseDistance, 30);
+  assert.equal(fixedDistance, 30);
   assert.equal(rotatedDistance, 30);
   assert.deepEqual(baseLayout.spots["tower-left"], {
     id: "tower-left",
-    label: "Clockwise tower",
+    label: "Left tower",
+    x: 35,
+    y: 63,
+  });
+  assert.deepEqual(fixedLayout.spots["tower-left"], {
+    id: "tower-left",
+    label: "Left tower",
     x: 35,
     y: 63,
   });
   assert.deepEqual(rotatedLayout.spots["tower-left"], {
     id: "tower-left",
-    label: "Clockwise tower",
+    label: "Left tower",
     x: 37,
     y: 35,
   });
@@ -579,10 +594,17 @@ test("generates rotated tower layouts with fixed tower spacing", () => {
 
 test("generates one tower layout for each mechanic step", () => {
   const layouts = rules.generateTowerLayouts(sequenceRandom([0, 0.25, 0.5]));
+  const rotatedLayouts = rules.generateTowerLayouts(sequenceRandom([0, 0.25, 0.5]), {
+    rotateTowers: true,
+  });
 
   assert.equal(layouts.length, rules.mechanicSteps.length);
   assert.deepEqual(
     layouts.slice(0, 3).map((layout) => layout.bossRotationDegrees),
+    [0, 0, 0],
+  );
+  assert.deepEqual(
+    rotatedLayouts.slice(0, 3).map((layout) => layout.bossRotationDegrees),
     [0, 90, 180],
   );
 });

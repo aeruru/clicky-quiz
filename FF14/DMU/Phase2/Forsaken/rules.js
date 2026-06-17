@@ -224,9 +224,8 @@
     );
   }
 
-  function generateTowerLayout(random = Math.random) {
-    // const rotationDegrees = random() * 360;
-    const rotationDegrees = 0;
+  function generateTowerLayout(random = Math.random, options = {}) {
+    const rotationDegrees = options.rotateTowers ? random() * 360 : 0;
     const spots = Object.fromEntries(
       towerLayoutBaseSpots.map((spot) => {
         const rotatedSpot = rotateSpot(spot, rotationDegrees);
@@ -237,8 +236,8 @@
     return { bossRotationDegrees: rotationDegrees, spots };
   }
 
-  function generateTowerLayouts(random = Math.random) {
-    return mechanicSteps.map(() => generateTowerLayout(random));
+  function generateTowerLayouts(random = Math.random, options = {}) {
+    return mechanicSteps.map(() => generateTowerLayout(random, options));
   }
 
   function generateBaitCasts(random = Math.random) {

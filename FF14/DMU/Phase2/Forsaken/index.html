@@ -75,6 +75,20 @@
             <input id="hide-timeline-details" type="checkbox">
             <span>Hide timeline text</span>
           </label>
+          <label
+            class="option-toggle"
+            title="Add countdown timers to mechanic steps."
+          >
+            <input id="enable-timer" type="checkbox">
+            <span>Use timer</span>
+          </label>
+          <label
+            class="option-toggle"
+            title="Randomly rotate tower layouts for each tower step."
+          >
+            <input id="rotate-towers" type="checkbox">
+            <span>Rotate towers</span>
+          </label>
           <button
             class="panel-start-button"
             id="new-round-button"
@@ -93,13 +107,6 @@
         <section class="timeline-panel" aria-labelledby="timeline-title">
           <div class="timeline-panel-header">
             <h2 id="timeline-title">Timeline</h2>
-            <button
-              class="advance-step-button"
-              id="advance-step-button"
-              type="button"
-            >
-              Next step
-            </button>
             <div class="round-timer" id="round-timer" hidden>
               Time: <span id="timer-count">5</span>
             </div>
@@ -133,13 +140,20 @@
           </div>
           <div class="arena-dialog start-overlay" id="start-overlay" hidden>
             <p>Choose your role first</p>
-            <button id="start-button" type="button" disabled>Start Forsaken</button>
+            <button id="start-button" type="button" disabled>
+              <span class="button-label">Start Forsaken</span>
+              <span class="keybind-hint">(spacebar)</span>
+            </button>
           </div>
           <div class="round-result" id="round-result" hidden>
             <p id="round-result-message"></p>
+            <div class="result-debuff-summary" id="result-debuff-summary" hidden></div>
             <div class="result-actions">
               <button id="try-again-button" type="button">Try Again</button>
-              <button id="continue-button" type="button" hidden>Continue</button>
+              <button id="continue-button" type="button" hidden>
+                <span class="button-label">Continue</span>
+                <span class="keybind-hint">(spacebar)</span>
+              </button>
             </div>
           </div>
         </div>

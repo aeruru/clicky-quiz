@@ -2,13 +2,14 @@ const rules = window.forsakenRules;
 const roleButtons = [...document.querySelectorAll(".role-button")];
 const selectedRoleLabel = document.querySelector("#selected-role-label");
 const hideTimelineDetails = document.querySelector("#hide-timeline-details");
+const enableTimer = document.querySelector("#enable-timer");
+const rotateTowers = document.querySelector("#rotate-towers");
 const newRoundButton = document.querySelector("#new-round-button");
 const roundsPlayed = document.querySelector("#rounds-played");
 const winStreak = document.querySelector("#win-streak");
 const roundTimer = document.querySelector("#round-timer");
 const timerCount = document.querySelector("#timer-count");
 const timeline = document.querySelector("#mechanic-timeline");
-const advanceStepButton = document.querySelector("#advance-step-button");
 const roleMarkerLayer = document.querySelector("#role-marker-layer");
 const towerLayer = document.querySelector("#tower-layer");
 const spotTargetLayer = document.querySelector("#spot-target-layer");
@@ -22,6 +23,7 @@ const tryAgainButton = document.querySelector("#try-again-button");
 const continueButton = document.querySelector("#continue-button");
 const result = document.querySelector("#round-result");
 const resultMessage = document.querySelector("#round-result-message");
+const resultDebuffSummary = document.querySelector("#result-debuff-summary");
 
 const roleAssets = {
   H1: { number: "1", src: "../../Phase1/GravenImage3/roles/healer-role.svg" },
@@ -59,9 +61,12 @@ let game = {
   debuffs: {},
   openingDebuffs: {},
   phase: "idle",
+  pendingResolutionDebuffs: null,
   played: 0,
   revealAssignments: null,
   revealDebuffs: null,
+  revealDebuffRoles: [],
+  revealResolutionApplied: false,
   revealSelectedRole: "",
   revealWasWrong: false,
   selectedRole: "",
@@ -96,6 +101,14 @@ function updateTimer() {
 
 function updateTimelineDetailMode() {
   timeline.classList.toggle("mechanic-timeline-compact", hideTimelineDetails.checked);
+}
+
+function timersEnabled() {
+  return enableTimer.checked;
+}
+
+function towerLayoutOptions() {
+  return { rotateTowers: rotateTowers.checked };
 }
 
 function stopTimer() {
@@ -152,6 +165,14 @@ function displayDebuffs() {
   return game.revealDebuffs || game.debuffs;
 }
 
+function shouldShowDebuffForRole(role) {
+  if (isPrepPhase()) {
+    return true;
+  }
+
+  return game.revealResolutionApplied && game.revealDebuffRoles.includes(role);
+}
+
 function renderTimeline() {
   timeline.replaceChildren(
     ...rules.mechanicSteps.map((step, index) => {
@@ -174,19 +195,52 @@ function renderTimeline() {
       return item;
     }),
   );
+  scrollTimelineToCurrentStep();
+}
+
+function scrollTimelineToCurrentStep() {
+  window.requestAnimationFrame(() => {
+    const activeStep = timeline.querySelector(".timeline-step-active");
+
+    if (!activeStep) {
+      return;
+    }
+
+    timeline.scrollTop =
+      activeStep.offsetTop - timeline.clientHeight / 2 + activeStep.clientHeight / 2;
+  });
 }
 
 function renderRoleMarkers() {
   const placements = rolePlacementsForCurrentView();
+  const duplicateCounts = rolePlacementDuplicateCounts(placements);
+  const duplicateIndexes = {};
 
-  roleMarkerLayer.replaceChildren(...placements.map(renderRoleMarker));
+  roleMarkerLayer.replaceChildren(
+    ...placements.map((placement) => {
+      const duplicateIndex = duplicateIndexes[placement.spot] || 0;
+      duplicateIndexes[placement.spot] = duplicateIndex + 1;
+
+      return renderRoleMarker(placement, {
+        duplicateCount: duplicateCounts[placement.spot] || 1,
+        duplicateIndex,
+      });
+    }),
+  );
+}
+
+function rolePlacementDuplicateCounts(placements) {
+  return placements.reduce((counts, placement) => {
+    counts[placement.spot] = (counts[placement.spot] || 0) + 1;
+    return counts;
+  }, {});
 }
 
 function rolePlacementsForCurrentView() {
   if (isIdlePhase() || isPrepPhase()) {
     return rules.rolePlacements.map((placement) => ({
       ...placement,
-      showDebuff: isPrepPhase(),
+      showDebuff: placement.roles.some(shouldShowDebuffForRole),
     }));
   }
 
@@ -204,12 +258,12 @@ function rolePlacementsForCurrentView() {
   return Object.entries(assignments).map(([role, spot]) => ({
     roles: [role],
     spot,
-    showDebuff: true,
+    showDebuff: shouldShowDebuffForRole(role),
   }));
 }
 
-function renderRoleMarker(placement) {
-  const spot = spotById(placement.spot);
+function renderRoleMarker(placement, duplicate = { duplicateCount: 1, duplicateIndex: 0 }) {
+  const spot = offsetDuplicateSpot(spotById(placement.spot), duplicate);
   const primaryRole = placement.roles[0];
   const asset = roleAssets[primaryRole];
   const debuffType = displayDebuffs()[primaryRole] || placement.debuff;
@@ -248,6 +302,22 @@ function renderRoleMarker(placement) {
   return marker;
 }
 
+function offsetDuplicateSpot(spot, duplicate) {
+  if (duplicate.duplicateCount <= 1) {
+    return spot;
+  }
+
+  const offsetStep = 3;
+  const midpoint = (duplicate.duplicateCount - 1) / 2;
+  const offset = (duplicate.duplicateIndex - midpoint) * offsetStep;
+
+  return {
+    ...spot,
+    x: spot.x + offset,
+    y: spot.y + offset,
+  };
+}
+
 function renderBossIndicator() {
   const towerLayout = currentTowerLayout();
   const rotationDegrees = isIdlePhase() || isPrepPhase()
@@ -274,7 +344,11 @@ function renderTowers() {
 function renderBaitCast() {
   const cast = game.baitCasts[game.currentStepIndex];
 
-  if (!cast || rules.towerSetParityForStep(game.currentStepIndex) !== "even") {
+  if (
+    !isSolvingPhase() ||
+    !cast ||
+    rules.towerSetParityForStep(game.currentStepIndex) !== "even"
+  ) {
     baitCast.hidden = true;
     return;
   }
@@ -356,22 +430,35 @@ function renderCurrentStep() {
 }
 
 function renderOverlays() {
-  roundTimer.hidden = !isSolvingPhase();
+  roundTimer.hidden = !isSolvingPhase() || !timersEnabled();
   startOverlay.hidden = !isIdlePhase() && !isPrepPhase();
 
   if (isIdlePhase()) {
     startOverlayMessage.textContent = game.selectedRole
       ? "Ready"
       : "Choose your role first";
-    startButton.textContent = "Start";
+    setKeybindButtonLabel(startButton, "Start");
     startButton.disabled = !game.selectedRole;
   }
 
   if (isPrepPhase()) {
     startOverlayMessage.textContent = "Review your debuffs";
-    startButton.textContent = "Start Forsaken";
+    setKeybindButtonLabel(startButton, "Start Forsaken");
     startButton.disabled = false;
   }
+}
+
+function setKeybindButtonLabel(button, label) {
+  button.replaceChildren(
+    Object.assign(document.createElement("span"), {
+      className: "button-label",
+      textContent: label,
+    }),
+    Object.assign(document.createElement("span"), {
+      className: "keybind-hint",
+      textContent: "(spacebar)",
+    }),
+  );
 }
 
 function selectRole(role) {
@@ -404,21 +491,30 @@ function finishRound(didWin, message = "") {
   });
 
   if (didWin) {
+    resetResultCorner();
+    resultDebuffSummary.hidden = true;
     game.streak += 1;
     result.classList.add("round-result-win");
     resultMessage.textContent = message || "Correct";
+    tryAgainButton.hidden = false;
     tryAgainButton.textContent = "Play Again";
     continueButton.hidden = true;
   } else {
+    resetResultCorner();
+    resultDebuffSummary.hidden = true;
     game.streak = 0;
     game.currentStepIndex = 0;
     game.debuffs = {};
     game.openingDebuffs = {};
+    game.pendingResolutionDebuffs = null;
     game.revealAssignments = null;
     game.revealDebuffs = null;
+    game.revealDebuffRoles = [];
+    game.revealResolutionApplied = false;
     game.revealWasWrong = false;
     result.classList.remove("round-result-win");
     resultMessage.textContent = message || "Try again";
+    tryAgainButton.hidden = false;
     tryAgainButton.textContent = "Try Again";
     continueButton.hidden = true;
     renderCurrentStep();
@@ -432,6 +528,9 @@ function advanceStep() {
   stopRevealTimer();
   game.revealAssignments = null;
   game.revealDebuffs = null;
+  game.pendingResolutionDebuffs = null;
+  game.revealDebuffRoles = [];
+  game.revealResolutionApplied = false;
   game.revealSelectedRole = "";
   game.revealWasWrong = false;
   game.currentStepIndex += 1;
@@ -444,32 +543,6 @@ function advanceStep() {
   startStepTimer();
 }
 
-function previewNextStep() {
-  if (isRevealPhase()) {
-    result.hidden = true;
-    continueButton.hidden = true;
-    advanceStep();
-    return;
-  }
-
-  stopTimer();
-  stopRevealTimer();
-  result.hidden = true;
-  game.currentStepIndex = (game.currentStepIndex + 1) % rules.mechanicSteps.length;
-  game.phase = "idle";
-  game.active = false;
-  game.revealAssignments = null;
-  game.revealDebuffs = null;
-  game.revealWasWrong = false;
-
-  if (game.active) {
-    startStepTimer();
-    return;
-  }
-
-  renderCurrentStep();
-}
-
 function startStepTimer() {
   stopTimer();
   stopRevealTimer();
@@ -477,15 +550,27 @@ function startStepTimer() {
   game.active = true;
   game.revealAssignments = null;
   game.revealDebuffs = null;
+  game.pendingResolutionDebuffs = null;
+  game.revealDebuffRoles = [];
+  game.revealResolutionApplied = false;
   game.revealWasWrong = false;
   renderCurrentStep();
 
+  if (!timersEnabled()) {
+    return;
+  }
+
+  startCountdownTimer();
+}
+
+function startCountdownTimer() {
+  stopTimer();
   game.timerId = window.setInterval(() => {
     game.timeRemaining -= 1;
     updateTimer();
 
     if (game.timeRemaining <= 0) {
-      showCorrectReveal();
+      showTimeoutReveal();
     }
   }, 1000);
 }
@@ -494,6 +579,8 @@ function startRound() {
   stopTimer();
   stopRevealTimer();
   result.hidden = true;
+  resultDebuffSummary.hidden = true;
+  tryAgainButton.hidden = false;
 
   if (!game.selectedRole) {
     game.phase = "idle";
@@ -509,8 +596,11 @@ function startRound() {
   game.phase = "prep";
   game.revealAssignments = null;
   game.revealDebuffs = null;
+  game.pendingResolutionDebuffs = null;
+  game.revealDebuffRoles = [];
+  game.revealResolutionApplied = false;
   game.revealWasWrong = false;
-  game.towerLayouts = rules.generateTowerLayouts();
+  game.towerLayouts = rules.generateTowerLayouts(Math.random, towerLayoutOptions());
   game.played += 1;
   updateStats();
   renderCurrentStep();
@@ -538,17 +628,40 @@ function showCorrectReveal() {
   prepareRevealState(false);
   renderCurrentStep();
   revealCorrectSpot(false);
+  positionResultPanelAwayFromTowers();
+  renderResultDebuffSummary(game.revealDebuffRoles, game.revealDebuffs);
+  result.classList.add("round-result-win");
+  resultMessage.textContent = `Correct. ${selectedRoleSpotMessage()}`;
+  tryAgainButton.hidden = true;
+  continueButton.hidden = false;
+  result.hidden = false;
+}
+
+function showTimeoutReveal() {
+  prepareRevealState(false);
+  renderCurrentStep();
+  revealCorrectSpot(false);
+  positionResultPanelAwayFromTowers();
+  renderResultDebuffSummary(game.revealDebuffRoles, game.revealDebuffs);
+  result.classList.remove("round-result-win");
+  resultMessage.textContent = `Time's up. ${selectedRoleSpotMessage()}`;
+  tryAgainButton.hidden = true;
+  continueButton.hidden = false;
+  result.hidden = false;
 }
 
 function showIncorrectReveal(message) {
   prepareRevealState(true);
   renderCurrentStep();
   revealCorrectSpot(true);
+  positionResultPanelAwayFromTowers();
+  renderResultDebuffSummary(game.revealDebuffRoles, game.revealDebuffs);
   game.active = false;
   game.phase = "failed";
   game.streak = 0;
   result.classList.remove("round-result-win");
-  resultMessage.textContent = message;
+  resultMessage.textContent = `${message} ${selectedRoleSpotMessage()}`;
+  tryAgainButton.hidden = false;
   tryAgainButton.textContent = "Restart";
   continueButton.hidden = false;
   updateStats();
@@ -557,19 +670,22 @@ function showIncorrectReveal(message) {
 
 function prepareRevealState(wasWrong) {
   const assignments = roleAssignmentsForCurrentStep();
+  const towerRoles = rolesInsideTowers(assignments);
   const resolutionDebuffs = rules.generateTowerResolutionDebuffs(
     game.currentStepIndex,
-    rolesInsideTowers(assignments),
+    towerRoles,
   );
 
   stopTimer();
   game.phase = wasWrong ? "failed" : "revealing";
   game.active = false;
+  game.pendingResolutionDebuffs = resolutionDebuffs;
   game.revealAssignments = assignments;
-  game.revealDebuffs = { ...game.debuffs, ...resolutionDebuffs };
+  game.revealDebuffs = { ...game.debuffs };
+  game.revealDebuffRoles = towerRoles;
+  game.revealResolutionApplied = false;
   game.revealSelectedRole = game.selectedRole;
   game.revealWasWrong = wasWrong;
-  game.debuffs = game.revealDebuffs;
 }
 
 function rolesInsideTowers(assignments) {
@@ -589,29 +705,111 @@ function isInsideTowerSpot(spotId) {
   ].includes(spotId);
 }
 
-function continueAfterIncorrect() {
+function continueReveal() {
+  stopRevealTimer();
+  game.revealDebuffs = { ...game.debuffs, ...(game.pendingResolutionDebuffs || {}) };
+  game.debuffs = game.revealDebuffs;
+  const hasNewDebuffs = Object.keys(game.pendingResolutionDebuffs || {}).length > 0;
+  game.pendingResolutionDebuffs = null;
+  game.revealResolutionApplied = true;
   result.hidden = true;
+  tryAgainButton.hidden = false;
   continueButton.hidden = true;
-  advanceStep();
+
+  if (!hasNewDebuffs) {
+    advanceStep();
+    return;
+  }
+
+  renderCurrentStep();
+  revealCorrectSpot(game.revealWasWrong);
+  positionResultPanelAwayFromTowers();
+  result.hidden = true;
+  resultDebuffSummary.hidden = true;
+  game.revealTimerId = window.setTimeout(() => {
+    advanceStep();
+  }, 3000);
 }
 
-function correctSpotExplanation() {
-  const step = rules.stepByIndex(game.currentStepIndex);
+function selectedRoleSpotMessage() {
   const correctSpotId = selectedRoleCorrectSpotId();
   const spot = correctSpotId ? rules.spotForId(correctSpotId, currentTowerLayout()) : null;
-  const baitCastTarget = rules.baitTargetSpotForStep(game.currentStepIndex, game.baitCasts);
+  const spotLabel = spot?.label || "configured";
 
-  if (baitCastTarget) {
-    const cast = game.baitCasts[game.currentStepIndex];
-    return `${cast.label} sends everyone to ${spot.label}.`;
+  return `${game.selectedRole} should be in the ${spotLabel} spot.`;
+}
+
+function renderResultDebuffSummary(roles, debuffs) {
+  const orderedRoles = rules.roles.filter((role) => roles.includes(role));
+
+  resultDebuffSummary.hidden = orderedRoles.length === 0;
+  resultDebuffSummary.replaceChildren(
+    ...orderedRoles.map((role) => resultDebuffCard(role, debuffs[role])),
+  );
+}
+
+function resultDebuffCard(role, debuffType) {
+  const asset = roleAssets[role];
+  const debuffAsset = debuffAssets[debuffType];
+  const card = document.createElement("div");
+  const roleIcon = document.createElement("span");
+  const icon = document.createElement("img");
+  const number = document.createElement("span");
+
+  card.className = "result-debuff-card";
+  roleIcon.className = "result-role-icon";
+  icon.src = asset.src;
+  icon.alt = role;
+  number.className = "result-role-number";
+  number.textContent = asset.number;
+  roleIcon.append(icon, number);
+  card.append(roleIcon);
+
+  if (debuffAsset) {
+    const debuff = document.createElement("img");
+
+    debuff.className = `result-debuff-icon ${debuffType === "cone" ? "result-debuff-icon-cone" : ""}`;
+    debuff.src = debuffAsset.src;
+    debuff.alt = debuffAsset.alt;
+    card.append(debuff);
   }
 
-  if (!spot) {
-    return `${game.selectedRole} does not have a configured spot for ${step.label} yet.`;
+  return card;
+}
+
+function positionResultPanelAwayFromTowers() {
+  resetResultCorner();
+
+  const towerSpots = rules.towerSpotPositionsForStep(
+    game.currentStepIndex,
+    currentTowerLayout(),
+  );
+
+  if (towerSpots.length === 0) {
+    result.classList.add("round-result-corner-bottom-left");
+    return;
   }
 
-  const debuff = game.debuffs[game.selectedRole];
-  return `${game.selectedRole} had ${debuff}, so the correct spot for ${step.label} was ${spot.label}.`;
+  const average = towerSpots.reduce(
+    (total, spot) => ({
+      x: total.x + spot.x / towerSpots.length,
+      y: total.y + spot.y / towerSpots.length,
+    }),
+    { x: 0, y: 0 },
+  );
+  const vertical = average.y >= 50 ? "top" : "bottom";
+  const horizontal = average.x >= 50 ? "left" : "right";
+
+  result.classList.add(`round-result-corner-${vertical}-${horizontal}`);
+}
+
+function resetResultCorner() {
+  result.classList.remove(
+    "round-result-corner-top-left",
+    "round-result-corner-top-right",
+    "round-result-corner-bottom-left",
+    "round-result-corner-bottom-right",
+  );
 }
 
 function handleSpotClick(event) {
@@ -629,7 +827,24 @@ function handleSpotClick(event) {
   }
 
   target.classList.add("spot-target-wrong");
-  showIncorrectReveal(`Incorrect. ${correctSpotExplanation()}`);
+  showIncorrectReveal("Incorrect.");
+}
+
+function handleKeyboardShortcut(event) {
+  if (event.code !== "Space" || event.target.closest("input, select, textarea")) {
+    return;
+  }
+
+  if (!startOverlay.hidden && !startButton.disabled) {
+    event.preventDefault();
+    handleStartButtonClick();
+    return;
+  }
+
+  if (!result.hidden && !continueButton.hidden && !continueButton.disabled) {
+    event.preventDefault();
+    continueReveal();
+  }
 }
 
 roleButtons.forEach((button) => {
@@ -641,9 +856,24 @@ roleButtons.forEach((button) => {
 newRoundButton.addEventListener("click", startRound);
 startButton.addEventListener("click", handleStartButtonClick);
 tryAgainButton.addEventListener("click", startRound);
-continueButton.addEventListener("click", continueAfterIncorrect);
-advanceStepButton.addEventListener("click", previewNextStep);
+continueButton.addEventListener("click", continueReveal);
 hideTimelineDetails.addEventListener("change", updateTimelineDetailMode);
+enableTimer.addEventListener("change", () => {
+  if (!timersEnabled()) {
+    stopTimer();
+  } else if (isSolvingPhase()) {
+    startCountdownTimer();
+  }
+
+  renderOverlays();
+});
+document.addEventListener("keydown", handleKeyboardShortcut);
+rotateTowers.addEventListener("change", () => {
+  if (isIdlePhase() || isPrepPhase()) {
+    game.towerLayouts = rules.generateTowerLayouts(Math.random, towerLayoutOptions());
+    renderCurrentStep();
+  }
+});
 
 updateTimelineDetailMode();
 updateStats();
