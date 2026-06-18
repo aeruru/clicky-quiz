@@ -43,6 +43,8 @@
     { id: "future", label: "Future's End", targetSpot: "bait-back" },
   ];
 
+  // Timeline order drives both UI rendering and tower-set numbering. The first
+  // step is a prep-only Forsaken read; every later tower step is clickable.
   const mechanicSteps = [
     {
       id: "forsaken",
@@ -137,6 +139,8 @@
     },
   ];
 
+  // Static spots are used before towers rotate. Tower-relative spots below are
+  // rotated as one layout when the rotate-towers option is enabled.
   const staticArenaSpots = [
     { id: "north", label: "North", x: 50, y: 11 },
     { id: "northeast", label: "Northeast", x: 78, y: 22 },
@@ -177,6 +181,8 @@
   ];
   const arenaSpots = [...staticArenaSpots, ...towerLayoutBaseSpots];
 
+  // Opening placements show the initial role boxes during idle/prep. They are
+  // intentionally separate from mechanic assignments so prep cannot leak spots.
   const openingRolePlacements = [
     { roles: ["H1"], spot: "opening-support-1", debuff: "spread" },
     { roles: ["MT"], spot: "opening-support-2", debuff: "stack" },
@@ -225,7 +231,9 @@
   }
 
   function generateTowerLayout(random = Math.random, options = {}) {
-    const rotationDegrees = options.rotateTowers ? random() * 360 : 0;
+    const rotationDegrees =
+      options.rotationDegrees ??
+      (options.rotateTowers ? (random() < 0.5 ? -45 : 45) : 0);
     const spots = Object.fromEntries(
       towerLayoutBaseSpots.map((spot) => {
         const rotatedSpot = rotateSpot(spot, rotationDegrees);
@@ -237,7 +245,15 @@
   }
 
   function generateTowerLayouts(random = Math.random, options = {}) {
-    return mechanicSteps.map(() => generateTowerLayout(random, options));
+    // A round chooses one direction, clockwise or counterclockwise, and all
+    // tower steps keep that same 45-degree rotation.
+    const rotationDegrees = options.rotateTowers
+      ? (random() < 0.5 ? -45 : 45)
+      : 0;
+
+    return mechanicSteps.map(() =>
+      generateTowerLayout(random, { ...options, rotationDegrees }),
+    );
   }
 
   function generateBaitCasts(random = Math.random) {
@@ -302,6 +318,8 @@
   }
 
   function towerResponsibilityGroupForSet(towerSetNumber) {
+    // Group A handles the opening three tower sets and the final set; Group B
+    // handles the middle four tower sets.
     if (towerSetNumber >= 1 && towerSetNumber <= 3) {
       return "A";
     }
@@ -372,6 +390,8 @@
     openingDebuffs,
     currentDebuffs = openingDebuffs,
   ) {
+    // Odd and even tower sets use different priority systems, so dispatch by
+    // tower-set parity after deriving the set number from the timeline.
     const towerSetNumber = towerSetNumberForStep(stepIndex);
 
     if (towerSetNumber === 1 || towerSetNumber === 3 || towerSetNumber === 5 || towerSetNumber === 7) {

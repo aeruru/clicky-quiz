@@ -59,6 +59,7 @@ let game = {
   baitCasts: rules.generateBaitCasts(),
   currentStepIndex: 0,
   debuffs: {},
+  failureCount: 0,
   openingDebuffs: {},
   phase: "idle",
   pendingResolutionDebuffs: null,
@@ -76,6 +77,13 @@ let game = {
   towerLayouts: rules.generateTowerLayouts(),
   timeRemaining: rules.mechanicSteps[0].seconds,
 };
+
+// Phase glossary:
+// idle: no round is running; the user can choose a role and start.
+// prep: Forsaken has started, opening debuffs are visible, and the user can study them.
+// active: the user is choosing a green square for the current mechanic step.
+// revealing/failed: a chosen spot is being resolved before Continue is pressed.
+// complete: the timeline is finished and the final result is visible.
 
 function spotById(spotId) {
   return rules.spotForId(spotId, currentTowerLayout());
@@ -342,20 +350,45 @@ function renderTowers() {
 }
 
 function renderBaitCast() {
-  const cast = game.baitCasts[game.currentStepIndex];
+  const castStepIndex = baitCastStepIndexForCurrentView();
+  const cast = castStepIndex === null ? null : game.baitCasts[castStepIndex];
 
-  if (
-    !isSolvingPhase() ||
-    !cast ||
-    rules.towerSetParityForStep(game.currentStepIndex) !== "even"
-  ) {
+  if (!cast) {
     baitCast.hidden = true;
     return;
   }
 
   baitCastLabel.textContent = cast.label;
-  setPosition(baitCast, rules.spotForId("bait-back", currentTowerLayout()));
+  setPosition(
+    baitCast,
+    rules.spotForId("bait-back", game.towerLayouts[castStepIndex] || currentTowerLayout()),
+  );
   baitCast.hidden = false;
+}
+
+function baitCastStepIndexForCurrentView() {
+  if (
+    isSolvingPhase() &&
+    rules.towerSetParityForStep(game.currentStepIndex) === "even"
+  ) {
+    return game.currentStepIndex;
+  }
+
+  // During the post-odd-tower debuff preview, show the castbar for the even
+  // tower that is about to start. Do not show it after even towers, because the
+  // next step is the bait resolution and the cast text would reveal the answer.
+  const nextStepIndex = game.currentStepIndex + 1;
+
+  if (
+    isRevealPhase() &&
+    game.revealResolutionApplied &&
+    rules.towerSetParityForStep(game.currentStepIndex) === "odd" &&
+    rules.towerSetParityForStep(nextStepIndex) === "even"
+  ) {
+    return nextStepIndex;
+  }
+
+  return null;
 }
 
 function renderSpotTargets() {
@@ -434,15 +467,14 @@ function renderOverlays() {
   startOverlay.hidden = !isIdlePhase() && !isPrepPhase();
 
   if (isIdlePhase()) {
-    startOverlayMessage.textContent = game.selectedRole
-      ? "Ready"
-      : "Choose your role first";
-    setKeybindButtonLabel(startButton, "Start");
-    startButton.disabled = !game.selectedRole;
+    startOverlayMessage.textContent = "Choose your role first";
+    startButton.hidden = true;
+    startButton.disabled = true;
   }
 
   if (isPrepPhase()) {
     startOverlayMessage.textContent = "Review your debuffs";
+    startButton.hidden = false;
     setKeybindButtonLabel(startButton, "Start Forsaken");
     startButton.disabled = false;
   }
@@ -472,11 +504,10 @@ function selectRole(role) {
     button.setAttribute("aria-pressed", isSelected);
   });
 
-  if (game.phase !== "idle") {
-    finishRound(false, `Role changed to ${role}.`);
+  if (isIdlePhase()) {
+    startRound();
   } else {
-    result.hidden = true;
-    renderCurrentStep();
+    finishRound(false, `Role changed to ${role}.`);
   }
 }
 
@@ -505,6 +536,7 @@ function finishRound(didWin, message = "") {
     game.streak = 0;
     game.currentStepIndex = 0;
     game.debuffs = {};
+    game.failureCount = 0;
     game.openingDebuffs = {};
     game.pendingResolutionDebuffs = null;
     game.revealAssignments = null;
@@ -536,11 +568,44 @@ function advanceStep() {
   game.currentStepIndex += 1;
 
   if (game.currentStepIndex >= rules.mechanicSteps.length) {
-    finishRound(true, "Timeline complete.");
+    completeRound();
     return;
   }
 
   startStepTimer();
+}
+
+function completeRound() {
+  stopTimer();
+  stopRevealTimer();
+  game.active = false;
+  game.phase = "complete";
+
+  spotTargets().forEach((target) => {
+    target.disabled = true;
+  });
+
+  resetResultCorner();
+  resultDebuffSummary.hidden = true;
+  continueButton.hidden = true;
+  tryAgainButton.hidden = false;
+  tryAgainButton.textContent = "Try Again";
+
+  if (game.failureCount === 0) {
+    game.streak += 1;
+    result.classList.add("round-result-win");
+    resultMessage.textContent = "Correctly executed Forsaken.";
+    tryAgainButton.textContent = "Play Again";
+  } else {
+    game.streak = 0;
+    result.classList.remove("round-result-win");
+    resultMessage.textContent =
+      `Failed Forsaken: ${game.failureCount} ${game.failureCount === 1 ? "step" : "steps"} failed.`;
+    tryAgainButton.textContent = "Try Again";
+  }
+
+  updateStats();
+  result.hidden = false;
 }
 
 function startStepTimer() {
@@ -593,6 +658,7 @@ function startRound() {
   game.currentStepIndex = 0;
   game.openingDebuffs = rules.generateOpeningDebuffs();
   game.debuffs = { ...game.openingDebuffs };
+  game.failureCount = 0;
   game.phase = "prep";
   game.revealAssignments = null;
   game.revealDebuffs = null;
@@ -638,6 +704,7 @@ function showCorrectReveal() {
 }
 
 function showTimeoutReveal() {
+  game.failureCount += 1;
   prepareRevealState(false);
   renderCurrentStep();
   revealCorrectSpot(false);
@@ -651,6 +718,7 @@ function showTimeoutReveal() {
 }
 
 function showIncorrectReveal(message) {
+  game.failureCount += 1;
   prepareRevealState(true);
   renderCurrentStep();
   revealCorrectSpot(true);
@@ -721,6 +789,8 @@ function continueReveal() {
     return;
   }
 
+  // Keep this preview anchored to the resolved tower step. Advancing the step
+  // here would render next-step assignments and leak the next answer.
   renderCurrentStep();
   revealCorrectSpot(game.revealWasWrong);
   positionResultPanelAwayFromTowers();

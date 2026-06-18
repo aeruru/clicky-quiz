@@ -550,7 +550,10 @@ test("labels tower-relative green squares for mechanic references", () => {
 test("generates tower layouts with fixed tower spacing", () => {
   const baseLayout = rules.generateTowerLayout(sequenceRandom([0]));
   const fixedLayout = rules.generateTowerLayout(sequenceRandom([0.25]));
-  const rotatedLayout = rules.generateTowerLayout(sequenceRandom([0.25]), {
+  const counterClockwiseLayout = rules.generateTowerLayout(sequenceRandom([0.25]), {
+    rotateTowers: true,
+  });
+  const clockwiseLayout = rules.generateTowerLayout(sequenceRandom([0.75]), {
     rotateTowers: true,
   });
   const baseDistance = distance(
@@ -561,17 +564,23 @@ test("generates tower layouts with fixed tower spacing", () => {
     fixedLayout.spots["tower-left"],
     fixedLayout.spots["tower-right"],
   );
-  const rotatedDistance = distance(
-    rotatedLayout.spots["tower-left"],
-    rotatedLayout.spots["tower-right"],
+  const counterClockwiseDistance = distance(
+    counterClockwiseLayout.spots["tower-left"],
+    counterClockwiseLayout.spots["tower-right"],
+  );
+  const clockwiseDistance = distance(
+    clockwiseLayout.spots["tower-left"],
+    clockwiseLayout.spots["tower-right"],
   );
 
   assert.equal(baseLayout.bossRotationDegrees, 0);
   assert.equal(fixedLayout.bossRotationDegrees, 0);
-  assert.equal(rotatedLayout.bossRotationDegrees, 90);
+  assert.equal(counterClockwiseLayout.bossRotationDegrees, -45);
+  assert.equal(clockwiseLayout.bossRotationDegrees, 45);
   assert.equal(baseDistance, 30);
   assert.equal(fixedDistance, 30);
-  assert.equal(rotatedDistance, 30);
+  assert.equal(counterClockwiseDistance, 30);
+  assert.equal(clockwiseDistance, 30);
   assert.deepEqual(baseLayout.spots["tower-left"], {
     id: "tower-left",
     label: "Left tower",
@@ -584,17 +593,26 @@ test("generates tower layouts with fixed tower spacing", () => {
     x: 35,
     y: 63,
   });
-  assert.deepEqual(rotatedLayout.spots["tower-left"], {
+  assert.deepEqual(counterClockwiseLayout.spots["tower-left"], {
     id: "tower-left",
     label: "Left tower",
-    x: 37,
-    y: 35,
+    x: 48.586,
+    y: 69.799,
+  });
+  assert.deepEqual(clockwiseLayout.spots["tower-left"], {
+    id: "tower-left",
+    label: "Left tower",
+    x: 30.201,
+    y: 48.586,
   });
 });
 
 test("generates one tower layout for each mechanic step", () => {
   const layouts = rules.generateTowerLayouts(sequenceRandom([0, 0.25, 0.5]));
-  const rotatedLayouts = rules.generateTowerLayouts(sequenceRandom([0, 0.25, 0.5]), {
+  const counterClockwiseLayouts = rules.generateTowerLayouts(sequenceRandom([0.25, 0.75]), {
+    rotateTowers: true,
+  });
+  const clockwiseLayouts = rules.generateTowerLayouts(sequenceRandom([0.75, 0.25]), {
     rotateTowers: true,
   });
 
@@ -604,8 +622,12 @@ test("generates one tower layout for each mechanic step", () => {
     [0, 0, 0],
   );
   assert.deepEqual(
-    rotatedLayouts.slice(0, 3).map((layout) => layout.bossRotationDegrees),
-    [0, 90, 180],
+    counterClockwiseLayouts.map((layout) => layout.bossRotationDegrees),
+    rules.mechanicSteps.map(() => -45),
+  );
+  assert.deepEqual(
+    clockwiseLayouts.map((layout) => layout.bossRotationDegrees),
+    rules.mechanicSteps.map(() => 45),
   );
 });
 
