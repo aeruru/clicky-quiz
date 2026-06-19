@@ -115,6 +115,7 @@ function finishRound(didWin = rules.isCorrectSelection(game.currentPattern, game
   result.textContent = didWin
     ? `Correct: ${labelForAnswer(answer)}.`
     : `${prefix ? `${prefix} ` : ""}Answer: ${labelForAnswer(answer)}.`;
+  nextButton.textContent = didWin ? "Next Pattern" : "Try Again";
   updateStats();
 }
 
@@ -137,6 +138,7 @@ function startRound() {
   resetButtons();
   renderPattern(game.currentPattern);
   result.textContent = "Pick spread or stack, then in or out.";
+  nextButton.textContent = "Next Pattern";
   startTimer();
 }
 

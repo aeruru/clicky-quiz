@@ -34,6 +34,32 @@
           <p>Win streak: <span id="win-streak">0</span></p>
         </div>
 
+        <div class="option-panel" aria-label="Quiz options">
+          <label
+            class="option-toggle"
+            title="For players who use right justified debuffs. This flips only the displayed arrow order."
+          >
+            <input id="flip-arrows" type="checkbox">
+            <span>Right justified debuffs</span>
+          </label>
+
+          <label
+            class="option-toggle"
+            title="Rotate the arena so the D marker is north."
+          >
+            <input id="rotate-arena" type="checkbox">
+            <span>D north</span>
+          </label>
+
+          <label
+            class="option-toggle"
+            title="Generate only patterns where the first and second arrows are different."
+          >
+            <input id="different-arrows-only" type="checkbox">
+            <span>Different arrows only</span>
+          </label>
+        </div>
+
         <div class="arrow-panel" aria-live="polite">
           <div class="arrow-card">
             <img id="first-arrow-image" src="arrows/arrow-up.svg" alt="">
@@ -45,32 +71,7 @@
           </div>
         </div>
 
-        <label
-          class="option-toggle"
-          title="For players who use right justified debuffs. This flips only the displayed arrow order."
-        >
-          <input id="flip-arrows" type="checkbox">
-          <span>Right justified debuffs</span>
-        </label>
-
-        <label
-          class="option-toggle"
-          title="Rotate the arena so the D marker is north."
-        >
-          <input id="rotate-arena" type="checkbox">
-          <span>D north</span>
-        </label>
-
-        <label
-          class="option-toggle"
-          title="Generate only patterns where the first and second arrows are different."
-        >
-          <input id="different-arrows-only" type="checkbox">
-          <span>Different arrows only</span>
-        </label>
-
         <div class="panel-links">
-          <a class="back-link" href="../BigBoxArrowsGuide/">View guide</a>
           <a class="back-link" href="../../../../index.html">Back to quizzes</a>
         </div>
       </aside>
