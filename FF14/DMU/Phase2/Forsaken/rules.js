@@ -245,15 +245,32 @@
   }
 
   function generateTowerLayouts(random = Math.random, options = {}) {
-    // A round chooses one direction, clockwise or counterclockwise, and all
-    // tower steps keep that same 45-degree rotation.
-    const rotationDegrees = options.rotateTowers
-      ? (random() < 0.5 ? -45 : 45)
+    // A round chooses one direction, then the layout advances 45 degrees after
+    // each completed tower step.
+    const rotationDirection = options.rotateTowers
+      ? (random() < 0.5 ? -1 : 1)
       : 0;
 
-    return mechanicSteps.map(() =>
-      generateTowerLayout(random, { ...options, rotationDegrees }),
+    return mechanicSteps.map((_, index) =>
+      generateTowerLayout(random, {
+        ...options,
+        rotationDegrees: towerLayoutRotationDegreesForStep(index, rotationDirection),
+      }),
     );
+  }
+
+  function towerLayoutRotationDegreesForStep(stepIndex, rotationDirection) {
+    const completedTowerSteps = completedTowerStepsBeforeCurrentStep(stepIndex);
+
+    return completedTowerSteps === 0
+      ? 0
+      : rotationDirection * 45 * completedTowerSteps;
+  }
+
+  function completedTowerStepsBeforeCurrentStep(stepIndex) {
+    return mechanicSteps
+      .slice(0, stepIndex)
+      .filter(isTowerStep).length;
   }
 
   function generateBaitCasts(random = Math.random) {

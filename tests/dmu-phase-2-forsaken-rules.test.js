@@ -623,11 +623,11 @@ test("generates one tower layout for each mechanic step", () => {
   );
   assert.deepEqual(
     counterClockwiseLayouts.map((layout) => layout.bossRotationDegrees),
-    rules.mechanicSteps.map(() => -45),
+    [0, 0, -45, -90, -90, -135, -180, -180, -225, -270, -270, -315, -360],
   );
   assert.deepEqual(
     clockwiseLayouts.map((layout) => layout.bossRotationDegrees),
-    rules.mechanicSteps.map(() => 45),
+    [0, 0, 45, 90, 90, 135, 180, 180, 225, 270, 270, 315, 360],
   );
 });
 
