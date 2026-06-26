@@ -42,6 +42,7 @@
     { id: "past", label: "Past's End", targetSpot: "bait-between" },
     { id: "future", label: "Future's End", targetSpot: "bait-back" },
   ];
+  const finalAteSetupSpot = "bait-between";
 
   // Timeline order drives both UI rendering and tower-set numbering. The first
   // step is a prep-only Forsaken read; every later tower step is clickable.
@@ -131,8 +132,15 @@
       validSpotIds: towerBaitSpotIds,
     },
     {
-      id: "ate-bait-4",
+      id: "ate-bait-4-set",
       label: "All Things Ending Bait",
+      seconds: 5,
+      towerSpots: defaultTowerSpots,
+      validSpotIds: towerBaitSpotIds,
+    },
+    {
+      id: "ate-bait-4-resolve",
+      label: "All Things Ending Dodge",
       seconds: 5,
       towerSpots: defaultTowerSpots,
       validSpotIds: towerBaitSpotIds,
@@ -287,11 +295,23 @@
         return;
       }
 
-      casts[stepIndex] = randomBaitCast(random);
-      casts[nextBaitStepIndex] = casts[stepIndex];
+      const cast = randomBaitCast(random);
+      const resolveStepIndex = baitResolveStepIndexForTowerStep(stepIndex, nextBaitStepIndex);
+
+      casts[stepIndex] = cast;
+      casts[resolveStepIndex] = cast;
     });
 
     return casts;
+  }
+
+  function baitResolveStepIndexForTowerStep(towerStepIndex, firstBaitStepIndex) {
+    const towerSetNumber = towerSetNumberForStep(towerStepIndex);
+    const nextStepIndex = firstBaitStepIndex + 1;
+
+    return towerSetNumber === 8 && isBaitStep(stepByIndex(nextStepIndex))
+      ? nextStepIndex
+      : firstBaitStepIndex;
   }
 
   function randomBaitCast(random = Math.random) {
@@ -653,6 +673,10 @@
   }
 
   function baitTargetSpotForStep(stepIndex, baitCasts = null) {
+    if (stepByIndex(stepIndex)?.id === "ate-bait-4-set") {
+      return finalAteSetupSpot;
+    }
+
     const cast = baitCasts?.[stepIndex];
 
     if (!cast || !isBaitStep(stepByIndex(stepIndex))) {

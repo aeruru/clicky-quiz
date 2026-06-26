@@ -21,7 +21,7 @@ test("defines fixed two-player teams", () => {
   ]);
 });
 
-test("defines the thirteen Forsaken timeline steps", () => {
+test("defines the fourteen Forsaken timeline steps", () => {
   assert.deepEqual(
     rules.mechanicSteps.map((step) => step.label),
     [
@@ -37,6 +37,7 @@ test("defines the thirteen Forsaken timeline steps", () => {
       "All Things Ending Bait",
       "7th towers",
       "8th towers",
+      "All Things Ending Between",
       "All Things Ending Bait",
     ],
   );
@@ -240,7 +241,8 @@ test("generates bait casts on even tower steps and their following bait steps", 
     label: "Future's End",
     targetSpot: "bait-back",
   });
-  assert.equal(casts[12], casts[11]);
+  assert.equal(casts[12], undefined);
+  assert.equal(casts[13], casts[11]);
   assert.equal(casts[0], undefined);
   assert.equal(casts[4], undefined);
 });
@@ -259,6 +261,22 @@ test("uses bait cast text to choose the following bait-step correct spot", () =>
   assert.deepEqual(rules.correctSpotIdsForStep(3, futureCasts), ["bait-back"]);
   assert.equal(rules.isCorrectSpot(3, "bait-back", futureCasts), true);
   assert.equal(rules.isCorrectSpot(3, "bait-between", futureCasts), false);
+});
+
+test("splits final All Things Ending into fixed between then cast-dependent bait", () => {
+  const pastCasts = {
+    13: { id: "past", label: "Past's End", targetSpot: "bait-between" },
+  };
+  const futureCasts = {
+    13: { id: "future", label: "Future's End", targetSpot: "bait-back" },
+  };
+
+  assert.deepEqual(rules.correctSpotIdsForStep(12, pastCasts), ["bait-between"]);
+  assert.deepEqual(rules.correctSpotIdsForStep(12, futureCasts), ["bait-between"]);
+  assert.equal(rules.isCorrectSpot(12, "bait-between", futureCasts), true);
+  assert.equal(rules.isCorrectSpot(12, "bait-back", futureCasts), false);
+  assert.deepEqual(rules.correctSpotIdsForStep(13, pastCasts), ["bait-between"]);
+  assert.deepEqual(rules.correctSpotIdsForStep(13, futureCasts), ["bait-back"]);
 });
 
 test("keeps tower steps permissive while bait cast only resolves on bait steps", () => {
@@ -623,11 +641,11 @@ test("generates one tower layout for each mechanic step", () => {
   );
   assert.deepEqual(
     counterClockwiseLayouts.map((layout) => layout.bossRotationDegrees),
-    [0, 0, -45, -90, -90, -135, -180, -180, -225, -270, -270, -315, -360],
+    [0, 0, -45, -90, -90, -135, -180, -180, -225, -270, -270, -315, -360, -360],
   );
   assert.deepEqual(
     clockwiseLayouts.map((layout) => layout.bossRotationDegrees),
-    [0, 0, 45, 90, 90, 135, 180, 180, 225, 270, 270, 315, 360],
+    [0, 0, 45, 90, 90, 135, 180, 180, 225, 270, 270, 315, 360, 360],
   );
 });
 

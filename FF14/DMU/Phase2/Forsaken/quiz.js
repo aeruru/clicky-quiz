@@ -712,7 +712,8 @@ function showTimeoutReveal() {
   renderResultDebuffSummary(game.revealDebuffRoles, game.revealDebuffs);
   result.classList.remove("round-result-win");
   resultMessage.textContent = `Time's up. ${selectedRoleSpotMessage()}`;
-  tryAgainButton.hidden = true;
+  tryAgainButton.hidden = false;
+  tryAgainButton.textContent = "Restart";
   continueButton.hidden = false;
   result.hidden = false;
 }
